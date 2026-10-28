@@ -25,6 +25,7 @@ Here is how each activity is calibrated for their brain development:
 | **🐵 Animal Peek-a-Boo** | **Working Memory & Visual Recall**<br>Holding visual positions in the mind across 6 peek-a-boo cards (3 matching pairs). | Friendly animals hide behind magic cards and pop out with a cheerful celebration dance. |
 | **🎈 Rainbow Balloon Pop** | **Quantity Sense & Hand-Eye Reflexes**<br>Counting from 1 to 5, tracking moving objects in 2D space. | Balloons float up with funny strings; tapping them bursts them with cartoon pop sounds and confetti! |
 | **🐻 Small to Big Safari** | **Spatial & Scale Sequencing**<br>Arranging objects systematically from smallest to largest. | Features cuddly teddy bears, stars, and kittens that grow larger as they are placed. |
+| **🎨 Magic Color & Paint** | **Color Recognition, Theory & Fine Motor Control**<br>Tap-to-color 5 cute pictures, freehand rainbow finger painting with cute stamps, and a magic bubbling potion lab that teaches color mixing! | 10 vibrant kid crayons with voice announcement of color names, sparkling rainbow brush, and bubbling potion cauldron! |
 | **🎩 Silly Dress-Up Studio** | **Goal Orientation & Reward Reinforcement**<br>Using stars earned through brain games to unlock funny hats and costumes. | Giggles makes silly faces wearing crowns, chef hats, pirate gear, and cool sunglasses! |
 
 ---

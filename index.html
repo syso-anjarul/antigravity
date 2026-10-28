@@ -247,6 +247,9 @@
     .game-card.size-game { border-color: #6BCB77; }
     .game-card.size-game .card-icon-wrap { background: #E6F9E9; color: #2B8A3E; }
 
+    .game-card.color-game { border-color: #00C49F; }
+    .game-card.color-game .card-icon-wrap { background: #E6FAF6; color: #00A884; }
+
     .game-card.dress-game { border-color: #FF923C; }
     .game-card.dress-game .card-icon-wrap { background: #FFE8D6; color: #D9480F; }
 
@@ -676,6 +679,186 @@
       right: 4px;
     }
 
+    /* COLOR STUDIO STYLES */
+    .color-studio-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 620px;
+      gap: 12px;
+    }
+    .color-tabs {
+      display: flex;
+      gap: 8px;
+      background: #F1F5F9;
+      padding: 6px;
+      border-radius: 999px;
+      margin-bottom: 4px;
+    }
+    .color-tab-btn {
+      border: none;
+      background: transparent;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #64748B;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .color-tab-btn.active {
+      background: white;
+      color: #00A884;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transform: scale(1.04);
+    }
+    .color-palette-bar {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      background: #FFFFFF;
+      padding: 10px 14px;
+      border-radius: 24px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+      border: 2px solid #E2E8F0;
+      max-width: 100%;
+    }
+    .crayon-swatch {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.18);
+      cursor: pointer;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s;
+      position: relative;
+    }
+    .crayon-swatch:hover {
+      transform: scale(1.2);
+    }
+    .crayon-swatch.active {
+      transform: scale(1.28);
+      border-color: #1E293B;
+      box-shadow: 0 0 0 3px rgba(0,0,0,0.25);
+    }
+    .coloring-book-frame {
+      width: 100%;
+      max-width: 440px;
+      height: 310px;
+      background: white;
+      border: 4px solid #CBD5E1;
+      border-radius: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+      padding: 12px;
+      position: relative;
+    }
+    .coloring-svg {
+      width: 100%;
+      height: 100%;
+      touch-action: manipulation;
+    }
+    .colorable-part {
+      cursor: pointer;
+      stroke: #1E293B;
+      stroke-width: 4px;
+      stroke-linejoin: round;
+      stroke-linecap: round;
+      fill: #FFFFFF;
+      transition: fill 0.25s ease;
+    }
+    .colorable-part:hover {
+      opacity: 0.85;
+    }
+    .paint-canvas-wrap {
+      position: relative;
+      background: white;
+      border: 4px solid #CBD5E1;
+      border-radius: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+      touch-action: none;
+    }
+    #finger-paint-canvas {
+      display: block;
+      cursor: crosshair;
+    }
+    .tools-btn-row {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tool-action-btn {
+      background: #F1F5F9;
+      border: 2px solid #E2E8F0;
+      border-radius: 16px;
+      padding: 8px 14px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .tool-action-btn:hover {
+      background: #E2E8F0;
+      transform: scale(1.05);
+    }
+    .tool-action-btn.active {
+      background: #E0F2FE;
+      border-color: #0284C7;
+      color: #0369A1;
+    }
+    .mixing-stage-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+    .mixing-pot-wrap {
+      position: relative;
+      width: 170px;
+      height: 170px;
+    }
+    .mix-buttons-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      align-items: center;
+    }
+    .mix-drop-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 4px solid white;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      cursor: pointer;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mix-drop-btn:hover {
+      transform: scale(1.18);
+    }
+    .mix-drop-btn.selected {
+      border-color: #1E293B;
+      transform: scale(1.22);
+    }
+
     /* Confetti Canvas */
     #confetti-canvas {
       position: fixed;
@@ -938,7 +1121,17 @@
           </div>
         </div>
 
-        <!-- Bonus 6: Dress-Up Monster (Reward / Creative Room) -->
+        <!-- Game 6: Magic Color & Paint Studio -->
+        <div class="game-card color-game" onclick="startColorGame()">
+          <div class="card-icon-wrap">🎨</div>
+          <div class="card-info">
+            <span class="card-title">Magic Color & Paint</span>
+            <span class="card-desc">Coloring book, finger paint & mixing</span>
+            <span class="card-badge">Creativity & Colors</span>
+          </div>
+        </div>
+
+        <!-- Bonus 7: Dress-Up Monster (Reward / Creative Room) -->
         <div class="game-card dress-game" onclick="startDressGame()">
           <div class="card-icon-wrap">🎩</div>
           <div class="card-info">
@@ -1028,6 +1221,14 @@
             <div style="font-size: 0.78rem; color: #94A3B8;">Safari Size Sort</div>
           </div>
           <span style="color: #2B8A3E; font-size: 1.1rem; font-weight: 900;" id="stat-size">0 played</span>
+        </div>
+
+        <div class="analytic-item">
+          <div>
+            <div>🎨 Color Logic & Creativity</div>
+            <div style="font-size: 0.78rem; color: #94A3B8;">Magic Color & Paint Studio</div>
+          </div>
+          <span style="color: #00A884; font-size: 1.1rem; font-weight: 900;" id="stat-color">0 played</span>
         </div>
       </div>
 
@@ -1167,6 +1368,48 @@
       } catch(e) {}
     }
 
+    // Potion bubbling sound for color mixing
+    function playBubbleSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        for (let i = 0; i < 4; i++) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          const st = audioCtx.currentTime + i * 0.07;
+          const baseFreq = 420 + Math.random() * 260;
+          osc.frequency.setValueAtTime(baseFreq, st);
+          osc.frequency.exponentialRampToValueAtTime(baseFreq * 1.5, st + 0.06);
+          gain.gain.setValueAtTime(0.2, st);
+          gain.gain.exponentialRampToValueAtTime(0.01, st + 0.06);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(st);
+          osc.stop(st + 0.07);
+        }
+      } catch(e) {}
+    }
+
+    // Swoosh sound for brush strokes & stamps
+    function playBrushSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(500, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.09);
+      } catch(e) {}
+    }
+
     /* =====================================================================
        2. TEXT-TO-SPEECH (For 4-Year-Olds who cannot read yet!)
        Uses Web Speech API to cheerfully read prompts aloud
@@ -1211,7 +1454,8 @@
       odd: parseInt(localStorage.getItem('giggles_stat_odd') || '0'),
       memory: parseInt(localStorage.getItem('giggles_stat_memory') || '0'),
       counting: parseInt(localStorage.getItem('giggles_stat_counting') || '0'),
-      size: parseInt(localStorage.getItem('giggles_stat_size') || '0')
+      size: parseInt(localStorage.getItem('giggles_stat_size') || '0'),
+      color: parseInt(localStorage.getItem('giggles_stat_color') || '0')
     };
 
     function updateStarsDisplay() {
@@ -1399,6 +1643,7 @@
       else if (currentGame === 'memory') startMemoryGame();
       else if (currentGame === 'pop') startPopGame();
       else if (currentGame === 'size') startSizeGame();
+      else if (currentGame === 'color') startColorGame();
       else if (currentGame === 'dress') startDressGame();
     }
 
@@ -1911,6 +2156,551 @@
     }
 
     /* =====================================================================
+       11.5 MINI-GAME 6: MAGIC COLOR & PAINT STUDIO (Creativity & Color Theory)
+       Milestones: Color recognition, fine motor control, primary/secondary colors
+       ===================================================================== */
+    const kidColors = [
+      { hex: "#FF3B30", name: "Red", sound: "Bright Red" },
+      { hex: "#FF9500", name: "Orange", sound: "Juicy Orange" },
+      { hex: "#FFCC00", name: "Yellow", sound: "Sunny Yellow" },
+      { hex: "#34C759", name: "Green", sound: "Grass Green" },
+      { hex: "#5AC8FA", name: "Sky Blue", sound: "Sky Blue" },
+      { hex: "#007AFF", name: "Blue", sound: "Ocean Blue" },
+      { hex: "#AF52DE", name: "Purple", sound: "Magic Purple" },
+      { hex: "#FF2D55", name: "Pink", sound: "Bubblegum Pink" },
+      { hex: "#8D6E63", name: "Brown", sound: "Teddy Brown" },
+      { hex: "#FFFFFF", name: "Eraser", sound: "Sparkle White" }
+    ];
+
+    let currentColor = "#FF3B30";
+    let colorStudioSubMode = 'pages'; // 'pages' | 'paint' | 'mix'
+    let currentBookPage = 0;
+    let paintTool = 'brush'; // 'brush' | 'rainbow' | 'eraser' | stamp
+    let isDrawing = false;
+    let rainbowHue = 0;
+    let mixDrop1 = null;
+    let mixDrop2 = null;
+
+    const coloringPages = [
+      {
+        title: "Cute Butterfly",
+        svg: `
+          <svg viewBox="0 0 300 220" class="coloring-svg">
+            <path class="colorable-part" d="M 150 100 C 130 30, 40 20, 40 80 C 40 120, 110 130, 150 110 Z" />
+            <path class="colorable-part" d="M 150 100 C 170 30, 260 20, 260 80 C 260 120, 190 130, 150 110 Z" />
+            <path class="colorable-part" d="M 150 115 C 120 125, 70 140, 75 180 C 80 210, 140 180, 150 135 Z" />
+            <path class="colorable-part" d="M 150 115 C 180 125, 230 140, 225 180 C 220 210, 160 180, 150 135 Z" />
+            <circle class="colorable-part" cx="95" cy="80" r="18" />
+            <circle class="colorable-part" cx="205" cy="80" r="18" />
+            <circle class="colorable-part" cx="110" cy="165" r="12" />
+            <circle class="colorable-part" cx="190" cy="165" r="12" />
+            <ellipse class="colorable-part" cx="150" cy="120" rx="14" ry="46" />
+            <circle class="colorable-part" cx="150" cy="62" r="18" />
+            <path d="M 144 48 Q 130 25 120 28 M 156 48 Q 170 25 180 28" stroke="#1E293B" stroke-width="4" stroke-linecap="round" fill="none" pointer-events="none" />
+            <circle cx="120" cy="28" r="5" fill="#1E293B" pointer-events="none" />
+            <circle cx="180" cy="28" r="5" fill="#1E293B" pointer-events="none" />
+            <circle cx="144" cy="60" r="3" fill="#1E293B" pointer-events="none" />
+            <circle cx="156" cy="60" r="3" fill="#1E293B" pointer-events="none" />
+          </svg>
+        `
+      },
+      {
+        title: "Space Rocket",
+        svg: `
+          <svg viewBox="0 0 300 220" class="coloring-svg">
+            <path class="colorable-part" d="M 130 175 Q 150 220 150 215 Q 150 220 170 175 Z" />
+            <path class="colorable-part" d="M 140 175 Q 150 200 160 175 Z" />
+            <path class="colorable-part" d="M 120 135 L 70 175 L 120 170 Z" />
+            <path class="colorable-part" d="M 180 135 L 230 175 L 180 170 Z" />
+            <path class="colorable-part" d="M 120 60 C 120 60, 120 170, 120 175 L 180 175 C 180 170, 180 60, 180 60 Z" />
+            <path class="colorable-part" d="M 120 60 Q 150 10 180 60 Z" />
+            <circle class="colorable-part" cx="150" cy="105" r="22" />
+            <circle class="colorable-part" cx="150" cy="105" r="14" />
+            <polygon class="colorable-part" points="50,40 55,50 66,52 58,60 60,71 50,65 40,71 42,60 34,52 45,50" />
+            <polygon class="colorable-part" points="250,90 254,98 263,100 256,106 258,115 250,110 242,115 244,106 237,100 246,98" />
+          </svg>
+        `
+      },
+      {
+        title: "Baby Dino",
+        svg: `
+          <svg viewBox="0 0 300 220" class="coloring-svg">
+            <polygon class="colorable-part" points="100,50 110,32 120,52" />
+            <polygon class="colorable-part" points="125,55 138,36 148,60" />
+            <polygon class="colorable-part" points="152,65 168,48 175,75" />
+            <polygon class="colorable-part" points="180,85 198,72 200,100" />
+            <path class="colorable-part" d="M 80 80 C 80 45, 125 45, 135 75 C 150 70, 200 85, 220 115 C 245 130, 275 140, 260 160 C 235 155, 215 165, 205 180 L 190 180 L 190 195 L 165 195 L 165 180 L 130 180 L 130 195 L 105 195 L 105 170 C 85 160, 75 130, 80 80 Z" />
+            <path class="colorable-part" d="M 120 120 C 135 110, 165 115, 175 145 C 175 165, 150 175, 125 170 Z" />
+            <circle cx="102" cy="70" r="5" fill="#1E293B" pointer-events="none" />
+            <circle cx="104" cy="68" r="1.5" fill="white" pointer-events="none" />
+            <path d="M 90 85 Q 98 94 108 86" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round" pointer-events="none" />
+          </svg>
+        `
+      },
+      {
+        title: "Yummy Ice Cream",
+        svg: `
+          <svg viewBox="0 0 300 220" class="coloring-svg">
+            <polygon class="colorable-part" points="110,120 190,120 150,215" />
+            <path class="colorable-part" d="M 105 120 C 95 95, 205 95, 195 120 C 185 130, 115 130, 105 120 Z" />
+            <path class="colorable-part" d="M 115 95 C 105 60, 195 60, 185 95 Z" />
+            <circle class="colorable-part" cx="150" cy="48" r="16" />
+            <path d="M 152 35 Q 170 15 175 20" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round" pointer-events="none" />
+            <circle class="colorable-part" cx="135" cy="75" r="4" />
+            <circle class="colorable-part" cx="160" cy="78" r="4" />
+            <circle class="colorable-part" cx="145" cy="105" r="4" />
+          </svg>
+        `
+      },
+      {
+        title: "Happy Fish",
+        svg: `
+          <svg viewBox="0 0 300 220" class="coloring-svg">
+            <polygon class="colorable-part" points="210,110 265,65 250,110 265,155" />
+            <path class="colorable-part" d="M 120 70 Q 150 35 180 70 Z" />
+            <path class="colorable-part" d="M 130 150 Q 150 180 170 150 Z" />
+            <ellipse class="colorable-part" cx="140" cy="110" rx="75" ry="48" />
+            <path class="colorable-part" d="M 140 64 Q 150 110 140 156 Q 160 110 160 68 Z" />
+            <circle cx="95" cy="100" r="7" fill="#1E293B" pointer-events="none" />
+            <circle cx="97" cy="98" r="2.5" fill="white" pointer-events="none" />
+            <path d="M 72 112 Q 80 122 90 115" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round" pointer-events="none" />
+            <circle class="colorable-part" cx="50" cy="75" r="14" />
+            <circle class="colorable-part" cx="35" cy="45" r="9" />
+          </svg>
+        `
+      }
+    ];
+
+    function startColorGame() {
+      currentGame = 'color';
+      showGameArena("Magic Color & Paint", "🎨", "Pick a colorful crayon and tap to color the picture!");
+      renderColorStudioUI();
+    }
+
+    function renderColorStudioUI() {
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="color-studio-wrapper">
+          <!-- Sub-mode Selector Tabs -->
+          <div class="color-tabs">
+            <button class="color-tab-btn ${colorStudioSubMode === 'pages' ? 'active' : ''}" onclick="switchColorSubMode('pages')">
+              📖 Coloring Book
+            </button>
+            <button class="color-tab-btn ${colorStudioSubMode === 'paint' ? 'active' : ''}" onclick="switchColorSubMode('paint')">
+              🖌️ Finger Paint
+            </button>
+            <button class="color-tab-btn ${colorStudioSubMode === 'mix' ? 'active' : ''}" onclick="switchColorSubMode('mix')">
+              🧪 Color Mixing
+            </button>
+          </div>
+
+          <!-- Color Palette Bar (Shared for pages & paint) -->
+          <div class="color-palette-bar" id="crayon-palette-bar" style="${colorStudioSubMode === 'mix' ? 'display:none;' : ''}">
+            ${kidColors.map((c, i) => `
+              <div class="crayon-swatch ${c.hex === currentColor ? 'active' : ''}" 
+                   style="background: ${c.hex};" 
+                   title="${c.name}"
+                   onclick="pickCrayonColor('${c.hex}', '${c.sound}')">
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- Dynamic Container for Active Submode -->
+          <div id="color-submode-content" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px;"></div>
+        </div>
+      `;
+
+      if (colorStudioSubMode === 'pages') renderColoringPagesMode();
+      else if (colorStudioSubMode === 'paint') renderFingerPaintMode();
+      else if (colorStudioSubMode === 'mix') renderColorMixingMode();
+    }
+
+    function switchColorSubMode(mode) {
+      playPopSound();
+      colorStudioSubMode = mode;
+      if (mode === 'pages') {
+        setPrompt("Pick a colorful crayon and tap to fill the picture!");
+      } else if (mode === 'paint') {
+        setPrompt("Draw freely with your finger or stamp cute magic stars!");
+      } else if (mode === 'mix') {
+        setPrompt("Tap two colors to see what magic color they make!");
+      }
+      renderColorStudioUI();
+    }
+
+    function pickCrayonColor(hex, name) {
+      playBrushSound();
+      currentColor = hex;
+      if (paintTool === 'eraser' || paintTool.length > 2) {
+        paintTool = 'brush'; // reset back to normal brush if a stamp or eraser was chosen
+      }
+      speakText(name);
+      document.querySelectorAll('.crayon-swatch').forEach(el => {
+        el.classList.toggle('active', el.style.backgroundColor === hex || el.title === name);
+      });
+      // also highlight brush in paint mode
+      document.querySelectorAll('.tool-action-btn').forEach(b => {
+        if (b.dataset.tool === 'brush') b.classList.add('active');
+        else b.classList.remove('active');
+      });
+    }
+
+    /* SUBMODE 1: COLORING BOOK */
+    function renderColoringPagesMode() {
+      const container = document.getElementById('color-submode-content');
+      const page = coloringPages[currentBookPage % coloringPages.length];
+
+      container.innerHTML = `
+        <div class="coloring-book-frame" id="svg-frame">
+          ${page.svg}
+        </div>
+        <div class="tools-btn-row">
+          <button class="tool-action-btn" onclick="nextColoringPage()">
+            <span>➡️</span> <span>Next Picture (${currentBookPage + 1}/${coloringPages.length})</span>
+          </button>
+          <button class="tool-action-btn" onclick="resetColoringPage()">
+            <span>🧼</span> <span>Clear</span>
+          </button>
+          <button class="tool-action-btn" style="background: #FFF9DB; border-color: #FFD93D; color: #8C5B00;" onclick="celebrateColoring()">
+            <span>🎉</span> <span>I'm Done!</span>
+          </button>
+        </div>
+      `;
+
+      // Attach tap-to-color listeners to all colorable parts
+      const parts = container.querySelectorAll('.colorable-part');
+      parts.forEach(part => {
+        part.onclick = (e) => {
+          e.stopPropagation();
+          part.style.fill = currentColor;
+          playPopSound();
+          part.classList.remove('boing-animate');
+          void part.offsetWidth;
+          part.classList.add('boing-animate');
+
+          const foundColor = kidColors.find(c => c.hex === currentColor);
+          if (foundColor) speakText(foundColor.name);
+        };
+      });
+    }
+
+    function nextColoringPage() {
+      playPopSound();
+      currentBookPage = (currentBookPage + 1) % coloringPages.length;
+      renderColoringPagesMode();
+      speakText(`Now let's color the ${coloringPages[currentBookPage].title}!`);
+    }
+
+    function resetColoringPage() {
+      playPopSound();
+      const parts = document.querySelectorAll('.coloring-book-frame .colorable-part');
+      parts.forEach(p => p.style.fill = '#FFFFFF');
+      speakText("Fresh clean page! Ready for new colors!");
+    }
+
+    function celebrateColoring() {
+      recordStat('color');
+      addStar(1);
+      speakText("What a gorgeous masterpiece! You are an amazing artist!");
+      setPrompt("🌟 WOW! What a beautiful picture! You earned a shiny star!");
+    }
+
+    /* SUBMODE 2: FINGER PAINT & STAMPS */
+    function renderFingerPaintMode() {
+      const container = document.getElementById('color-submode-content');
+      const canvasWidth = Math.min(420, window.innerWidth - 50);
+      const canvasHeight = 260;
+
+      container.innerHTML = `
+        <div class="tools-btn-row" style="margin-bottom: 6px;">
+          <button class="tool-action-btn active" data-tool="brush" onclick="setPaintTool('brush')">
+            🖌️ Brush
+          </button>
+          <button class="tool-action-btn" data-tool="rainbow" onclick="setPaintTool('rainbow')">
+            🌈 Rainbow
+          </button>
+          <button class="tool-action-btn" data-tool="eraser" onclick="setPaintTool('eraser')">
+            🧽 Eraser
+          </button>
+          <button class="tool-action-btn" data-tool="⭐" onclick="setPaintTool('⭐')">⭐</button>
+          <button class="tool-action-btn" data-tool="💖" onclick="setPaintTool('💖')">💖</button>
+          <button class="tool-action-btn" data-tool="🐾" onclick="setPaintTool('🐾')">🐾</button>
+          <button class="tool-action-btn" data-tool="🌸" onclick="setPaintTool('🌸')">🌸</button>
+          <button class="tool-action-btn" data-tool="🎈" onclick="setPaintTool('🎈')">🎈</button>
+        </div>
+
+        <div class="paint-canvas-wrap">
+          <canvas id="finger-paint-canvas" width="${canvasWidth}" height="${canvasHeight}"></canvas>
+        </div>
+
+        <div class="tools-btn-row" style="margin-top: 8px;">
+          <button class="tool-action-btn" onclick="clearPaintCanvas()">
+            <span>🧼</span> <span>Clear Canvas</span>
+          </button>
+          <button class="tool-action-btn" style="background: #FFF9DB; border-color: #FFD93D; color: #8C5B00;" onclick="celebratePainting()">
+            <span>🎉</span> <span>Celebrate My Art!</span>
+          </button>
+        </div>
+      `;
+
+      initPaintCanvasEvents();
+    }
+
+    function setPaintTool(tool) {
+      paintTool = tool;
+      playPopSound();
+      document.querySelectorAll('.tools-btn-row .tool-action-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.tool === tool);
+      });
+      if (tool === 'rainbow') speakText("Rainbow Magic Brush!");
+      else if (tool === 'eraser') speakText("Eraser!");
+      else if (tool === 'brush') speakText("Painting Brush!");
+      else speakText(tool + " stamp!");
+    }
+
+    function initPaintCanvasEvents() {
+      const pCanvas = document.getElementById('finger-paint-canvas');
+      if (!pCanvas) return;
+      const pCtx = pCanvas.getContext('2d');
+      pCtx.lineCap = 'round';
+      pCtx.lineJoin = 'round';
+      pCtx.lineWidth = 14;
+
+      function getPos(evt) {
+        const rect = pCanvas.getBoundingClientRect();
+        const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+        const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+        return {
+          x: clientX - rect.left,
+          y: clientY - rect.top
+        };
+      }
+
+      function startDraw(evt) {
+        evt.preventDefault();
+        const pos = getPos(evt);
+
+        // If stamp tool selected
+        if (['⭐', '💖', '🐾', '🌸', '🎈'].includes(paintTool)) {
+          pCtx.font = '34px sans-serif';
+          pCtx.textAlign = 'center';
+          pCtx.textBaseline = 'middle';
+          pCtx.fillText(paintTool, pos.x, pos.y);
+          playPopSound();
+          return;
+        }
+
+        isDrawing = true;
+        pCtx.beginPath();
+        pCtx.moveTo(pos.x, pos.y);
+        drawMove(evt);
+      }
+
+      function drawMove(evt) {
+        if (!isDrawing) return;
+        evt.preventDefault();
+        const pos = getPos(evt);
+
+        if (paintTool === 'eraser') {
+          pCtx.strokeStyle = '#FFFFFF';
+          pCtx.lineWidth = 26;
+        } else if (paintTool === 'rainbow') {
+          rainbowHue = (rainbowHue + 8) % 360;
+          pCtx.strokeStyle = `hsl(${rainbowHue}, 95%, 55%)`;
+          pCtx.lineWidth = 14;
+        } else {
+          pCtx.strokeStyle = currentColor;
+          pCtx.lineWidth = 14;
+        }
+
+        pCtx.lineTo(pos.x, pos.y);
+        pCtx.stroke();
+      }
+
+      function endDraw() {
+        if (isDrawing) {
+          isDrawing = false;
+          playBrushSound();
+        }
+      }
+
+      pCanvas.addEventListener('mousedown', startDraw);
+      pCanvas.addEventListener('mousemove', drawMove);
+      window.addEventListener('mouseup', endDraw);
+
+      pCanvas.addEventListener('touchstart', startDraw, { passive: false });
+      pCanvas.addEventListener('touchmove', drawMove, { passive: false });
+      window.addEventListener('touchend', endDraw);
+    }
+
+    function clearPaintCanvas() {
+      playPopSound();
+      const pCanvas = document.getElementById('finger-paint-canvas');
+      if (pCanvas) {
+        const pCtx = pCanvas.getContext('2d');
+        pCtx.clearRect(0, 0, pCanvas.width, pCanvas.height);
+      }
+      speakText("Clean paper! What will you paint next?");
+    }
+
+    function celebratePainting() {
+      recordStat('color');
+      addStar(1);
+      speakText("Hooray! What a magical drawing! High five!");
+      setPrompt("🌟 AWESOME ARTWORK! You are a creative superstar!");
+    }
+
+    /* SUBMODE 3: COLOR MIXING LABORATORY */
+    const mixOptions = [
+      { name: "Red", hex: "#FF3B30", emoji: "🔴" },
+      { name: "Yellow", hex: "#FFCC00", emoji: "🟡" },
+      { name: "Blue", hex: "#007AFF", emoji: "🔵" },
+      { name: "White", hex: "#F8FAFC", emoji: "⚪" }
+    ];
+
+    function renderColorMixingMode() {
+      mixDrop1 = null;
+      mixDrop2 = null;
+      const container = document.getElementById('color-submode-content');
+
+      container.innerHTML = `
+        <div class="mixing-stage-box">
+          <p style="font-weight: 800; font-size: 1.15rem; color: #334155;">
+            Tap TWO magic colors to mix inside the cauldron!
+          </p>
+
+          <!-- Potion Cauldron -->
+          <div class="mixing-pot-wrap" id="magic-cauldron">
+            <svg viewBox="0 0 200 200" width="100%" height="100%">
+              <!-- Cauldron handles -->
+              <circle cx="28" cy="115" r="14" fill="#334155" />
+              <circle cx="172" cy="115" r="14" fill="#334155" />
+              <!-- Cauldron legs -->
+              <rect x="55" y="170" width="14" height="25" rx="6" fill="#1E293B" />
+              <rect x="131" y="170" width="14" height="25" rx="6" fill="#1E293B" />
+              <!-- Cauldron Body -->
+              <ellipse cx="100" cy="130" rx="72" ry="52" fill="#1E293B" />
+              <ellipse cx="100" cy="85" rx="64" ry="18" fill="#334155" />
+              <!-- Cauldron Inside Liquid -->
+              <ellipse cx="100" cy="86" rx="55" ry="13" fill="#E2E8F0" id="cauldron-liquid" />
+              <!-- Bubbles -->
+              <circle cx="85" cy="80" r="6" fill="#F8FAFC" opacity="0.8" id="bubble-1" />
+              <circle cx="115" cy="82" r="5" fill="#F8FAFC" opacity="0.8" id="bubble-2" />
+            </svg>
+            <div id="cauldron-sparkle-text" style="position: absolute; top: 12px; left: 50%; transform: translateX(-50%); font-size: 2.2rem; pointer-events: none;">
+              ✨
+            </div>
+          </div>
+
+          <!-- Color Drops to Select -->
+          <div class="mix-buttons-row">
+            ${mixOptions.map(opt => `
+              <div class="mix-drop-btn" 
+                   style="background: ${opt.hex};" 
+                   title="${opt.name}"
+                   onclick="handleMixColorPick('${opt.name}', '${opt.hex}')">
+                ${opt.emoji}
+              </div>
+            `).join('')}
+          </div>
+
+          <div style="font-weight: 800; font-size: 1.1rem; color: #64748B; min-height: 28px;" id="mix-status-text">
+            Choose your first color!
+          </div>
+        </div>
+      `;
+    }
+
+    function handleMixColorPick(name, hex) {
+      if (!mixDrop1) {
+        mixDrop1 = { name, hex };
+        playPopSound();
+        speakText(name);
+        document.getElementById('mix-status-text').textContent = `1st Color: ${name}! Now tap a 2nd color!`;
+        const liquid = document.getElementById('cauldron-liquid');
+        liquid.setAttribute('fill', hex);
+      } else if (!mixDrop2) {
+        mixDrop2 = { name, hex };
+        playBubbleSound();
+        speakText(name);
+
+        // Mix calculation
+        const color1 = mixDrop1.name;
+        const color2 = mixDrop2.name;
+        let resultColor = "#7C3AED";
+        let resultName = "Purple";
+        let resultReason = "Red and Blue make PURPLE!";
+        let resultEmoji = "🟣";
+
+        const pair = [color1, color2].sort().join('+');
+
+        if (pair === 'Red+Yellow') {
+          resultColor = '#FF9500';
+          resultName = 'ORANGE';
+          resultReason = 'Red and Yellow make ORANGE! Yummy like carrots!';
+          resultEmoji = '🟠';
+        } else if (pair === 'Blue+Yellow') {
+          resultColor = '#34C759';
+          resultName = 'GREEN';
+          resultReason = 'Blue and Yellow make GREEN! Like shiny leaves!';
+          resultEmoji = '🟢';
+        } else if (pair === 'Blue+Red') {
+          resultColor = '#AF52DE';
+          resultName = 'PURPLE';
+          resultReason = 'Red and Blue make PURPLE! Like sweet grapes!';
+          resultEmoji = '🟣';
+        } else if (pair === 'Red+White') {
+          resultColor = '#FF8DA1';
+          resultName = 'PINK';
+          resultReason = 'Red and White make soft PINK! Like pretty flowers!';
+          resultEmoji = '🌸';
+        } else if (pair === 'Blue+White') {
+          resultColor = '#7DD3FC';
+          resultName = 'SKY BLUE';
+          resultReason = 'Blue and White make SKY BLUE! Like clear skies!';
+          resultEmoji = '🩵';
+        } else if (pair === 'White+Yellow') {
+          resultColor = '#FEF08A';
+          resultName = 'LIGHT YELLOW';
+          resultReason = 'Yellow and White make warm sunshine cream!';
+          resultEmoji = '✨';
+        } else {
+          resultColor = hex;
+          resultName = name;
+          resultReason = `Mixing ${name} and ${name} makes extra bright ${name}!`;
+          resultEmoji = '🌟';
+        }
+
+        const liquid = document.getElementById('cauldron-liquid');
+        liquid.setAttribute('fill', resultColor);
+
+        const pot = document.getElementById('magic-cauldron');
+        pot.classList.remove('boing-animate');
+        void pot.offsetWidth;
+        pot.classList.add('boing-animate');
+
+        document.getElementById('cauldron-sparkle-text').textContent = resultEmoji;
+        document.getElementById('mix-status-text').textContent = resultReason;
+
+        recordStat('color');
+        setTimeout(() => {
+          addStar(1);
+          speakText(resultReason);
+          setPrompt(`🧪 TA-DA! ${resultReason}`);
+        }, 300);
+
+        // Reset after 3 seconds for next mix
+        setTimeout(() => {
+          mixDrop1 = null;
+          mixDrop2 = null;
+          if (colorStudioSubMode === 'mix') {
+            document.getElementById('mix-status-text').textContent = "Mix two more colors!";
+          }
+        }, 3200);
+      }
+    }
+
+    /* =====================================================================
        12. BONUS ROOM: SILLY DRESS-UP STUDIO (Motivation & Reward)
        ===================================================================== */
     const wardrobeItems = [
@@ -1993,6 +2783,7 @@
       document.getElementById('stat-memory').textContent = `${stats.memory} played`;
       document.getElementById('stat-counting').textContent = `${stats.counting} played`;
       document.getElementById('stat-size').textContent = `${stats.size} played`;
+      document.getElementById('stat-color').textContent = `${stats.color} played`;
 
       document.getElementById('parent-modal').style.display = 'flex';
     }
