@@ -2295,16 +2295,14 @@
     let currentColor = "#FF3B30";
     let colorStudioSubMode = 'pages'; // 'pages' | 'paint' | 'mix'
     let currentBookPage = 0;
+    let currentGalleryCategory = 'all';
     let paintTool = 'brush'; // 'brush' | 'rainbow' | 'eraser' | stamp
     let isDrawing = false;
     let rainbowHue = 0;
     let mixDrop1 = null;
     let mixDrop2 = null;
 
-    
-    let currentGalleryCategory = 'all';
-
-    // 50 RICH SVG COLORING PAGES DATA
+    // 50 RICH SVG COLORING PAGES
     const coloringPages = [
   {
     "id": 1,
@@ -2658,16 +2656,92 @@
   }
 ];
 
+    function startColorGame() {
+      currentGame = 'color';
+      showGameArena("Magic Color & Paint", "🎨", "Pick a colorful crayon and tap to color the picture!");
+      renderColorStudioUI();
+    }
+
+    function renderColorStudioUI() {
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="color-studio-wrapper">
+          <!-- Sub-mode Selector Tabs -->
+          <div class="color-tabs">
+            <button class="color-tab-btn ${colorStudioSubMode === 'pages' ? 'active' : ''}" onclick="switchColorSubMode('pages')">
+              📖 Coloring Book
+            </button>
+            <button class="color-tab-btn ${colorStudioSubMode === 'paint' ? 'active' : ''}" onclick="switchColorSubMode('paint')">
+              🖌️ Finger Paint
+            </button>
+            <button class="color-tab-btn ${colorStudioSubMode === 'mix' ? 'active' : ''}" onclick="switchColorSubMode('mix')">
+              🧪 Color Mixing
+            </button>
+          </div>
+
+          <!-- Color Palette Bar (Shared for pages & paint) -->
+          <div class="color-palette-bar" id="crayon-palette-bar" style="${colorStudioSubMode === 'mix' ? 'display:none;' : ''}">
+            ${kidColors.map((c, i) => `
+              <div class="crayon-swatch ${c.hex === currentColor ? 'active' : ''}" 
+                   style="background: ${c.hex};" 
+                   title="${c.name}"
+                   onclick="pickCrayonColor('${c.hex}', '${c.sound}')">
+              </div>
+            `).join('')}
+          </div>
+
+          <!-- Dynamic Container for Active Submode -->
+          <div id="color-submode-content" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px;"></div>
+        </div>
+      `;
+
+      if (colorStudioSubMode === 'pages') renderColoringPagesMode();
+      else if (colorStudioSubMode === 'paint') renderFingerPaintMode();
+      else if (colorStudioSubMode === 'mix') renderColorMixingMode();
+    }
+
+    function switchColorSubMode(mode) {
+      playPopSound();
+      colorStudioSubMode = mode;
+      if (mode === 'pages') {
+        setPrompt("Pick a colorful crayon and tap to fill the picture!");
+      } else if (mode === 'paint') {
+        setPrompt("Draw freely with your finger or stamp cute magic stars!");
+      } else if (mode === 'mix') {
+        setPrompt("Tap two colors to see what magic color they make!");
+      }
+      renderColorStudioUI();
+    }
+
+    function pickCrayonColor(hex, name) {
+      playBrushSound();
+      currentColor = hex;
+      if (paintTool === 'eraser' || paintTool.length > 2) {
+        paintTool = 'brush';
+      }
+      speakText(name);
+      document.querySelectorAll('.crayon-swatch').forEach(el => {
+        el.classList.toggle('active', el.style.backgroundColor === hex || el.title === name);
+      });
+      document.querySelectorAll('.tool-action-btn').forEach(b => {
+        if (b.dataset.tool === 'brush') b.classList.add('active');
+        else b.classList.remove('active');
+      });
+    }
+
+    /* 50 PICTURES GALLERY MODAL CONTROLS */
     function openPictureGalleryModal() {
       playPopSound();
       renderGalleryTiles();
-      document.getElementById('gallery-modal').style.display = 'flex';
+      const modal = document.getElementById('gallery-modal');
+      if (modal) modal.style.display = 'flex';
       speakText("Pick any picture you want to color!");
     }
 
     function closePictureGalleryModal(e) {
       if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close')) return;
-      document.getElementById('gallery-modal').style.display = 'none';
+      const modal = document.getElementById('gallery-modal');
+      if (modal) modal.style.display = 'none';
     }
 
     function filterGalleryCategory(cat) {
@@ -2686,7 +2760,7 @@
         ? coloringPages 
         : coloringPages.filter(p => p.category === currentGalleryCategory);
 
-      grid.innerHTML = filtered.map((p, idx) => {
+      grid.innerHTML = filtered.map(p => {
         const globalIdx = coloringPages.findIndex(item => item.id === p.id);
         const isSelected = globalIdx === currentBookPage;
         return `
@@ -2728,7 +2802,7 @@
 
       container.innerHTML = `
         <div style="font-weight: 800; font-size: 1.15rem; color: #1E293B; display: flex; align-items: center; gap: 8px;">
-          <span>${page.emoji}</span>
+          <span style="font-size: 1.5rem;">${page.emoji}</span>
           <span>${page.title}</span>
           <span style="font-size: 0.8rem; background: #EDF2F7; color: #64748B; padding: 2px 8px; border-radius: 999px;">
             (${currentBookPage + 1} of 50)
@@ -2773,6 +2847,13 @@
           if (foundColor) speakText(foundColor.name);
         };
       });
+    }
+
+    function resetColoringPage() {
+      playPopSound();
+      const parts = document.querySelectorAll('.coloring-book-frame .colorable-part');
+      parts.forEach(p => p.style.fill = '#FFFFFF');
+      speakText("Fresh clean page! Ready for new colors!");
     }
 
     function celebrateColoring() {
@@ -2857,7 +2938,6 @@
         evt.preventDefault();
         const pos = getPos(evt);
 
-        // If stamp tool selected
         if (['⭐', '💖', '🐾', '🌸', '🎈'].includes(paintTool)) {
           pCtx.font = '34px sans-serif';
           pCtx.textAlign = 'center';
@@ -2949,18 +3029,13 @@
           <!-- Potion Cauldron -->
           <div class="mixing-pot-wrap" id="magic-cauldron">
             <svg viewBox="0 0 200 200" width="100%" height="100%">
-              <!-- Cauldron handles -->
               <circle cx="28" cy="115" r="14" fill="#334155" />
               <circle cx="172" cy="115" r="14" fill="#334155" />
-              <!-- Cauldron legs -->
               <rect x="55" y="170" width="14" height="25" rx="6" fill="#1E293B" />
               <rect x="131" y="170" width="14" height="25" rx="6" fill="#1E293B" />
-              <!-- Cauldron Body -->
               <ellipse cx="100" cy="130" rx="72" ry="52" fill="#1E293B" />
               <ellipse cx="100" cy="85" rx="64" ry="18" fill="#334155" />
-              <!-- Cauldron Inside Liquid -->
               <ellipse cx="100" cy="86" rx="55" ry="13" fill="#E2E8F0" id="cauldron-liquid" />
-              <!-- Bubbles -->
               <circle cx="85" cy="80" r="6" fill="#F8FAFC" opacity="0.8" id="bubble-1" />
               <circle cx="115" cy="82" r="5" fill="#F8FAFC" opacity="0.8" id="bubble-2" />
             </svg>
@@ -3001,7 +3076,6 @@
         playBubbleSound();
         speakText(name);
 
-        // Mix calculation
         const color1 = mixDrop1.name;
         const color2 = mixDrop2.name;
         let resultColor = "#7C3AED";
@@ -3066,7 +3140,6 @@
           setPrompt(`🧪 TA-DA! ${resultReason}`);
         }, 300);
 
-        // Reset after 3 seconds for next mix
         setTimeout(() => {
           mixDrop1 = null;
           mixDrop2 = null;
@@ -3178,5 +3251,33 @@
       }, { once: true });
     });
   </script>
+
+  <!-- PICTURE GALLERY MODAL (50 PICTURES) -->
+  <div class="gallery-modal-overlay" id="gallery-modal" onclick="closePictureGalleryModal(event)">
+    <div class="gallery-modal-card" onclick="event.stopPropagation()">
+      <div class="gallery-modal-header">
+        <h3 class="gallery-modal-title">
+          <span>🖼️</span> Pick a Picture to Color! (50 Pictures)
+        </h3>
+        <button class="modal-close" onclick="closePictureGalleryModal()" style="position:static;">✕</button>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="gallery-filter-tabs">
+        <button class="gallery-filter-pill active" onclick="filterGalleryCategory('all')">🌟 All (50)</button>
+        <button class="gallery-filter-pill" onclick="filterGalleryCategory('animals')">🐾 Animals (10)</button>
+        <button class="gallery-filter-pill" onclick="filterGalleryCategory('vehicles')">🚗 Vehicles (10)</button>
+        <button class="gallery-filter-pill" onclick="filterGalleryCategory('foods')">🍓 Yummy Foods (10)</button>
+        <button class="gallery-filter-pill" onclick="filterGalleryCategory('dinos')">🦕 Dinos & Bugs (10)</button>
+        <button class="gallery-filter-pill" onclick="filterGalleryCategory('nature')">🌈 Magic & Nature (10)</button>
+      </div>
+
+      <!-- Grid of 50 Picture Tiles -->
+      <div class="gallery-grid-scroll" id="gallery-grid">
+        <!-- Injected dynamically by JS -->
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
