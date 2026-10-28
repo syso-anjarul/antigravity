@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🌟 Giggles Brain Playground - Fun Analytics Game for Kids (Age 4)</title>
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
+      --card-bg: #FFFFFF;
+      --primary: #FF5E7E;
+      --primary-hover: #FF335C;
+      --secondary: #4D96FF;
+      --accent: #FFD93D;
+      --success: #6BCB77;
+      --purple: #9D4EDD;
+      --orange: #FF923C;
+      --text: #2D3748;
+      --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Quicksand', 'Nunito', system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Top Nav Bar */
+    header {
+      width: 100%;
+      max-width: 960px;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 20;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      background: white;
+      padding: 8px 16px;
+      border-radius: 999px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .brand-logo:hover {
+      transform: scale(1.05) rotate(-2deg);
+    }
+
+    .brand-logo h1 {
+      font-size: 1.3rem;
+      background: linear-gradient(45deg, #FF5E7E, #9D4EDD);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+    }
+
+    .top-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .star-counter {
+      background: #FFF9DB;
+      border: 3px solid #FFD93D;
+      color: #E67700;
+      font-weight: 900;
+      font-size: 1.25rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 10px rgba(255, 217, 61, 0.4);
+      animation: gentle-wobble 3s infinite ease-in-out;
+    }
+
+    .icon-btn {
+      background: white;
+      border: 3px solid #E2E8F0;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .icon-btn:hover {
+      transform: scale(1.15) rotate(5deg);
+      border-color: var(--secondary);
+    }
+    .icon-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Main Container */
+    main {
+      width: 100%;
+      max-width: 960px;
+      flex: 1;
+      padding: 10px 18px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+
+    /* Game Selection Hub Screen */
+    #hub-screen {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    /* Giggles Mascot Area */
+    .mascot-hero {
+      position: relative;
+      margin: 10px 0 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .speech-bubble {
+      background: white;
+      padding: 12px 22px;
+      border-radius: 24px;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: #333;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+      border: 3px solid #4D96FF;
+      position: relative;
+      margin-bottom: 12px;
+      max-width: 380px;
+      text-align: center;
+      animation: floatBubble 2.5s ease-in-out infinite alternate;
+    }
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 14px 14px 0;
+      border-style: solid;
+      border-color: #4D96FF transparent;
+      display: block;
+      width: 0;
+    }
+    .speech-bubble::before {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 10px 10px 0;
+      border-style: solid;
+      border-color: white transparent;
+      display: block;
+      width: 0;
+      z-index: 1;
+    }
+
+    .mascot-avatar {
+      width: 170px;
+      height: 170px;
+      filter: drop-shadow(0 12px 20px rgba(0,0,0,0.15));
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mascot-hero:hover .mascot-avatar {
+      transform: scale(1.08) rotate(-4deg);
+    }
+    .mascot-hero:active .mascot-avatar {
+      transform: scale(0.95);
+    }
+
+    /* Game Cards Grid */
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      width: 100%;
+    }
+
+    .game-card {
+      background: var(--card-bg);
+      border-radius: 26px;
+      padding: 18px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.08);
+      border: 4px solid transparent;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .game-card:hover {
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.14);
+    }
+    .game-card:active {
+      transform: scale(0.97);
+    }
+
+    .game-card.feed-game { border-color: #FF5E7E; }
+    .game-card.feed-game .card-icon-wrap { background: #FFE3E8; color: #FF5E7E; }
+
+    .game-card.odd-game { border-color: #FFD93D; }
+    .game-card.odd-game .card-icon-wrap { background: #FFF9DB; color: #E67700; }
+
+    .game-card.memory-game { border-color: #9D4EDD; }
+    .game-card.memory-game .card-icon-wrap { background: #F3E8FF; color: #9D4EDD; }
+
+    .game-card.pop-game { border-color: #4D96FF; }
+    .game-card.pop-game .card-icon-wrap { background: #E1F0FF; color: #4D96FF; }
+
+    .game-card.size-game { border-color: #6BCB77; }
+    .game-card.size-game .card-icon-wrap { background: #E6F9E9; color: #2B8A3E; }
+
+    .game-card.dress-game { border-color: #FF923C; }
+    .game-card.dress-game .card-icon-wrap { background: #FFE8D6; color: #D9480F; }
+
+    .card-icon-wrap {
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.3rem;
+      flex-shrink: 0;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+    }
+
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 900;
+      color: #2D3748;
+      margin-bottom: 4px;
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: #718096;
+      font-weight: 700;
+    }
+
+    .card-badge {
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 8px;
+      background: #EDF2F7;
+      color: #4A5568;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Active Game View Area */
+    #game-arena {
+      width: 100%;
+      background: white;
+      border-radius: 32px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      min-height: 480px;
+      border: 5px solid #F1F5F9;
+    }
+
+    .arena-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 2px dashed #E2E8F0;
+    }
+
+    .arena-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .arena-title {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #2D3748;
+    }
+
+    .btn-back {
+      background: #F1F5F9;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #475569;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-back:hover {
+      background: #E2E8F0;
+      transform: scale(1.05);
+    }
+
+    .prompt-box {
+      background: linear-gradient(135deg, #FFF9DB, #FFF3BF);
+      border: 3px solid #FFD93D;
+      border-radius: 20px;
+      padding: 12px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #8C5B00;
+      box-shadow: 0 6px 15px rgba(255, 217, 61, 0.25);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+      max-width: 90%;
+      text-align: center;
+    }
+    .prompt-box:hover {
+      transform: scale(1.03);
+    }
+    .prompt-box .speaker-icon {
+      font-size: 1.8rem;
+      animation: pulse 1.5s infinite;
+    }
+
+    .game-stage {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      min-height: 320px;
+    }
+
+    /* MINI GAME 1: FEED THE MONSTER */
+    .feed-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+    .feed-monster-target {
+      position: relative;
+      width: 190px;
+      height: 190px;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .feed-monster-target.mouth-open {
+      transform: scale(1.1);
+    }
+    .feed-monster-target.eating {
+      animation: monsterChomp 0.5s ease;
+    }
+    .feed-items-rack {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      max-width: 600px;
+    }
+    .feed-choice-item {
+      width: 95px;
+      height: 95px;
+      background: #F8FAFC;
+      border: 4px solid #CBD5E1;
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .feed-choice-item:hover {
+      transform: scale(1.15) translateY(-5px);
+      border-color: #4D96FF;
+      background: #EDF2F7;
+    }
+    .feed-choice-item:active {
+      transform: scale(0.9);
+    }
+
+    /* MINI GAME 2: ODD ONE OUT */
+    .odd-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 440px;
+      width: 100%;
+    }
+    .odd-card {
+      aspect-ratio: 1;
+      background: #F8FAFC;
+      border: 5px solid #E2E8F0;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 4rem;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .odd-card:hover {
+      transform: scale(1.08);
+      border-color: #FFD93D;
+      background: #FFFDF0;
+    }
+    .odd-card:active {
+      transform: scale(0.95);
+    }
+
+    /* MINI GAME 3: MEMORY MATCH */
+    .memory-grid {
+      display: grid;
+      gap: 14px;
+      max-width: 480px;
+      width: 100%;
+    }
+    .memory-card {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #7F5AF0, #9D4EDD);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(157, 78, 221, 0.3);
+      position: relative;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-style: preserve-3d;
+    }
+    .memory-card.revealed {
+      transform: rotateY(180deg);
+      background: white;
+      border: 4px solid #9D4EDD;
+    }
+    .memory-card .card-face-back {
+      font-size: 2.2rem;
+      color: white;
+      backface-visibility: hidden;
+    }
+    .memory-card .card-face-front {
+      font-size: 3.2rem;
+      backface-visibility: hidden;
+      transform: rotateY(180deg);
+      position: absolute;
+    }
+    .memory-card.matched {
+      animation: matchCelebrate 0.6s ease;
+      background: #E8F5E9;
+      border: 4px solid #4CAF50;
+      cursor: default;
+    }
+
+    /* MINI GAME 4: BALLOON POP */
+    .balloon-stage {
+      width: 100%;
+      height: 380px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 100%);
+      border: 3px solid #7DD3FC;
+    }
+    .floating-balloon {
+      position: absolute;
+      width: 85px;
+      height: 110px;
+      border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 2rem;
+      color: white;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      box-shadow: inset -6px -6px 12px rgba(0,0,0,0.15), 0 10px 18px rgba(0,0,0,0.12);
+      transition: transform 0.1s;
+      animation: floatUp linear forwards;
+    }
+    .floating-balloon::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      border-left: 6px solid transparent;
+      border-right: 6px solid transparent;
+      border-bottom: 10px solid inherit;
+    }
+    .floating-balloon .balloon-string {
+      position: absolute;
+      bottom: -32px;
+      width: 2px;
+      height: 24px;
+      background: rgba(0,0,0,0.25);
+    }
+
+    /* MINI GAME 5: SIZE SORT */
+    .size-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      width: 100%;
+    }
+    .size-slots {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+    }
+    .size-slot {
+      background: #F1F5F9;
+      border: 3px dashed #94A3B8;
+      border-radius: 24px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 12px;
+      position: relative;
+    }
+    .size-slot.slot-small { width: 100px; height: 110px; }
+    .size-slot.slot-medium { width: 130px; height: 140px; }
+    .size-slot.slot-big { width: 160px; height: 170px; }
+    .size-slot-label {
+      position: absolute;
+      top: -24px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #64748B;
+    }
+    .size-items-pool {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 24px;
+      min-height: 160px;
+    }
+    .size-item {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .size-item:hover {
+      transform: scale(1.15);
+    }
+
+    /* STICKER / DRESS-UP ROOM */
+    .wardrobe-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+    }
+    .closet-character-stage {
+      position: relative;
+      width: 200px;
+      height: 200px;
+    }
+    .accessory-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .wardrobe-items-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-width: 500px;
+    }
+    .wardrobe-item-card {
+      width: 78px;
+      height: 78px;
+      background: #F8FAFC;
+      border: 3px solid #CBD5E1;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+    .wardrobe-item-card:hover {
+      transform: scale(1.1);
+      border-color: #FF923C;
+    }
+    .wardrobe-item-card.equipped {
+      background: #FFF0E6;
+      border-color: #FF923C;
+      box-shadow: 0 0 0 3px rgba(255, 146, 60, 0.3);
+    }
+    .wardrobe-item-card.locked {
+      opacity: 0.45;
+      filter: grayscale(1);
+      cursor: not-allowed;
+    }
+    .wardrobe-item-card.locked::after {
+      content: '🔒';
+      font-size: 1.1rem;
+      position: absolute;
+      bottom: 2px;
+      right: 4px;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* Silly Celebrations & Visual Effects */
+    @keyframes floatBubble {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-8px); }
+    }
+
+    @keyframes gentle-wobble {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-3deg); }
+      75% { transform: rotate(3deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes monsterChomp {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.25) rotate(-5deg); }
+      60% { transform: scale(0.9) rotate(5deg); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes matchCelebrate {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.2) rotate(-8deg); }
+      70% { transform: scale(1.15) rotate(8deg); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(380px) rotate(0deg); }
+      100% { transform: translateY(-130px) rotate(15deg); }
+    }
+
+    @keyframes sillyBoing {
+      0% { transform: scale(1, 1); }
+      30% { transform: scale(1.3, 0.7); }
+      50% { transform: scale(0.8, 1.2); }
+      70% { transform: scale(1.1, 0.9); }
+      100% { transform: scale(1, 1); }
+    }
+
+    .boing-animate {
+      animation: sillyBoing 0.5s ease-out;
+    }
+
+    /* Parent Stats Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-content {
+      background: white;
+      border-radius: 28px;
+      padding: 24px;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s ease;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      font-size: 1.5rem;
+      border: none;
+      background: #F1F5F9;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    .analytics-list {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .analytic-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: #F8FAFC;
+      border-radius: 16px;
+      font-weight: 700;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header { padding: 10px 14px; }
+      .brand-logo h1 { font-size: 1.1rem; }
+      .prompt-box { font-size: 1.15rem; padding: 10px 16px; }
+      .games-grid { grid-template-columns: 1fr; }
+      .odd-grid { gap: 12px; }
+      .odd-card { font-size: 3.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Confetti Particle Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Navigation Bar -->
+  <header>
+    <div class="brand-logo" onclick="goToHub()" title="Back to Main Menu">
+      <span style="font-size: 1.8rem;">🎉</span>
+      <h1>Giggles Brain Playground</h1>
+    </div>
+
+    <div class="top-controls">
+      <div class="star-counter" id="stars-display" title="Stars collected!">
+        ⭐ <span id="stars-count">0</span>
+      </div>
+      <button class="icon-btn" id="sound-btn" onclick="toggleAudio()" title="Sound On / Off">🔊</button>
+      <button class="icon-btn" onclick="openParentModal()" title="Parent Analytics & Insights">📊</button>
+    </div>
+  </header>
+
+  <!-- Main Game Workspace -->
+  <main>
+    <!-- HUB SCREEN -->
+    <section id="hub-screen">
+      <!-- Mascot Hero -->
+      <div class="mascot-hero" onclick="tickleMonster()" title="Click to tickle Giggles!">
+        <div class="speech-bubble" id="hub-bubble">
+          "Hi little friend! Tap my belly or pick a funny brain game to play!"
+        </div>
+        <div class="mascot-avatar" id="main-mascot">
+          <!-- Inline SVG Mascot for super crisp high-fps animation -->
+          <svg viewBox="0 0 200 200" width="100%" height="100%" id="mascot-svg">
+            <defs>
+              <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FF6B8B" />
+                <stop offset="100%" stop-color="#FF8E53" />
+              </linearGradient>
+              <linearGradient id="bellyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFF9DB" />
+                <stop offset="100%" stop-color="#FFE066" />
+              </linearGradient>
+            </defs>
+            <!-- Monster Ears/Horns -->
+            <circle cx="50" cy="50" r="22" fill="#FF8E53" />
+            <circle cx="50" cy="50" r="14" fill="#FFD93D" />
+            <circle cx="150" cy="50" r="22" fill="#FF8E53" />
+            <circle cx="150" cy="50" r="14" fill="#FFD93D" />
+            
+            <!-- Monster Body -->
+            <ellipse cx="100" cy="115" rx="75" ry="70" fill="url(#bodyGrad)" />
+            
+            <!-- Belly -->
+            <ellipse cx="100" cy="130" rx="48" ry="42" fill="url(#bellyGrad)" />
+            
+            <!-- Eyes (Tracking) -->
+            <g id="eyes-group">
+              <!-- Left Eye -->
+              <circle cx="75" cy="88" r="18" fill="white" />
+              <circle cx="75" cy="88" r="8" fill="#1E293B" id="pupil-left" />
+              <circle cx="72" cy="84" r="3" fill="white" />
+
+              <!-- Right Eye -->
+              <circle cx="125" cy="88" r="18" fill="white" />
+              <circle cx="125" cy="88" r="8" fill="#1E293B" id="pupil-right" />
+              <circle cx="122" cy="84" r="3" fill="white" />
+            </g>
+
+            <!-- Rosy Cheeks -->
+            <circle cx="56" cy="112" r="10" fill="#FF3366" opacity="0.4" />
+            <circle cx="144" cy="112" r="10" fill="#FF3366" opacity="0.4" />
+
+            <!-- Mouth -->
+            <path id="mascot-mouth" d="M 80 120 Q 100 145 120 120" stroke="#881337" stroke-width="5" stroke-linecap="round" fill="#E11D48" />
+
+            <!-- Monster Little Feet -->
+            <circle cx="70" cy="180" r="14" fill="#E11D48" />
+            <circle cx="130" cy="180" r="14" fill="#E11D48" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- Brain Games Selection -->
+      <div class="games-grid">
+        <!-- Game 1: Feed the Monster (Attribute Sorting Analytics) -->
+        <div class="game-card feed-game" onclick="startFeedGame()">
+          <div class="card-icon-wrap">🍉</div>
+          <div class="card-info">
+            <span class="card-title">Feed Hungry Bobo</span>
+            <span class="card-desc">Color & Shape Sorting</span>
+            <span class="card-badge">Visual Logic</span>
+          </div>
+        </div>
+
+        <!-- Game 2: Odd One Out (Critical Differentiation Analytics) -->
+        <div class="game-card odd-game" onclick="startOddGame()">
+          <div class="card-icon-wrap">🔍</div>
+          <div class="card-info">
+            <span class="card-title">Spot the Odd One</span>
+            <span class="card-desc">Find what does not belong</span>
+            <span class="card-badge">Brain Analytics</span>
+          </div>
+        </div>
+
+        <!-- Game 3: Peek-a-boo Memory (Working Memory Analytics) -->
+        <div class="game-card memory-game" onclick="startMemoryGame()">
+          <div class="card-icon-wrap">🐵</div>
+          <div class="card-info">
+            <span class="card-title">Animal Peek-a-Boo</span>
+            <span class="card-desc">Match cute hiding animals</span>
+            <span class="card-badge">Memory Boost</span>
+          </div>
+        </div>
+
+        <!-- Game 4: Pop & Count (Quantity & Number Sense) -->
+        <div class="game-card pop-game" onclick="startPopGame()">
+          <div class="card-icon-wrap">🎈</div>
+          <div class="card-info">
+            <span class="card-title">Rainbow Balloon Pop</span>
+            <span class="card-desc">Catch, count & burst bubbles</span>
+            <span class="card-badge">Numbers & Focus</span>
+          </div>
+        </div>
+
+        <!-- Game 5: Size Safari (Comparative & Scale Analytics) -->
+        <div class="game-card size-game" onclick="startSizeGame()">
+          <div class="card-icon-wrap">🐻</div>
+          <div class="card-info">
+            <span class="card-title">Small to Big Safari</span>
+            <span class="card-desc">Order items by size</span>
+            <span class="card-badge">Spatial Order</span>
+          </div>
+        </div>
+
+        <!-- Bonus 6: Dress-Up Monster (Reward / Creative Room) -->
+        <div class="game-card dress-game" onclick="startDressGame()">
+          <div class="card-icon-wrap">🎩</div>
+          <div class="card-info">
+            <span class="card-title">Silly Dress-Up Studio</span>
+            <span class="card-desc">Unlock hats & funny toys</span>
+            <span class="card-badge">Reward Play</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVE GAME ARENA -->
+    <section id="game-arena">
+      <div class="arena-header">
+        <button class="btn-back" onclick="goToHub()">
+          <span>🏠</span> <span>Home</span>
+        </button>
+        <div class="arena-title-wrap">
+          <span id="arena-icon" style="font-size: 1.8rem;">🍉</span>
+          <h2 class="arena-title" id="arena-title">Feed Hungry Bobo</h2>
+        </div>
+        <button class="btn-back" onclick="replayCurrentGame()" title="Try Another Round">
+          <span>🔄</span> <span>Next</span>
+        </button>
+      </div>
+
+      <!-- Spoken Prompt / Visual Question Box -->
+      <div class="prompt-box" id="game-prompt-box" onclick="speakCurrentPrompt()">
+        <span class="speaker-icon">📢</span>
+        <span id="game-prompt-text">Can you feed the monster only RED things?</span>
+      </div>
+
+      <!-- Stage Area where dynamic game plays -->
+      <div class="game-stage" id="game-stage">
+        <!-- Dynamically populated by game script -->
+      </div>
+    </section>
+  </main>
+
+  <!-- PARENT ANALYTICS & INSIGHTS MODAL -->
+  <div class="modal-overlay" id="parent-modal" onclick="closeParentModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeParentModal()">✕</button>
+      <h2 style="color: #1E293B; display: flex; align-items: center; gap: 8px;">
+        <span>🧠</span> Brain Analytics Dashboard
+      </h2>
+      <p style="color: #64748B; font-size: 0.9rem; margin-top: 6px;">
+        Designed with preschool developmental benchmarks (Age 4 cognitive milestones).
+      </p>
+
+      <div class="analytics-list">
+        <div class="analytic-item">
+          <div>
+            <div>🎨 Category & Attribute Sorting</div>
+            <div style="font-size: 0.78rem; color: #94A3B8;">Feed Hungry Bobo</div>
+          </div>
+          <span style="color: #FF5E7E; font-size: 1.1rem; font-weight: 900;" id="stat-sorting">0 played</span>
+        </div>
+
+        <div class="analytic-item">
+          <div>
+            <div>🔍 Critical Differentiation</div>
+            <div style="font-size: 0.78rem; color: #94A3B8;">Spot the Odd One Out</div>
+          </div>
+          <span style="color: #E67700; font-size: 1.1rem; font-weight: 900;" id="stat-odd">0 played</span>
+        </div>
+
+        <div class="analytic-item">
+          <div>
+            <div>🧩 Working Memory & Recall</div>
+            <div style="font-size: 0.78rem; color: #94A3B8;">Animal Peek-a-Boo</div>
+          </div>
+          <span style="color: #9D4EDD; font-size: 1.1rem; font-weight: 900;" id="stat-memory">0 played</span>
+        </div>
+
+        <div class="analytic-item">
+          <div>
+            <div>🔢 Visual Counting & Focus</div>
+            <div style="font-size: 0.78rem; color: #94A3B8;">Rainbow Balloon Pop</div>
+          </div>
+          <span style="color: #4D96FF; font-size: 1.1rem; font-weight: 900;" id="stat-counting">0 played</span>
+        </div>
+
+        <div class="analytic-item">
+          <div>
+            <div>📏 Size Sequencing (Small to Big)</div>
+            <div style="font-size: 0.78rem; color: #94A3B8;">Safari Size Sort</div>
+          </div>
+          <span style="color: #2B8A3E; font-size: 1.1rem; font-weight: 900;" id="stat-size">0 played</span>
+        </div>
+      </div>
+
+      <div style="margin-top: 18px; padding: 12px; background: #EEF2FF; border-radius: 16px; font-size: 0.85rem; color: #4338CA;">
+        💡 <strong>Development Tip for 4-Year-Olds:</strong> Praise their effort rather than speed! Asking questions like <em>"Why do you think this one is different?"</em> helps develop verbal cognitive reasoning.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* =====================================================================
+       1. SYNTHETIC AUDIO ENGINE (Web Audio API)
+       Pure Web Audio - 100% offline, zero missing files, cartoon sounds!
+       ===================================================================== */
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      const btn = document.getElementById('sound-btn');
+      btn.textContent = soundEnabled ? '🔊' : '🔇';
+      if (soundEnabled) playPopSound();
+    }
+
+    // Play a friendly cartoon "Pop" sound
+    function playPopSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.09);
+      } catch(e) {}
+    }
+
+    // Play a funny cartoon "Boing" / Gulp sound
+    function playChompSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.15);
+
+        gain.gain.setValueAtTime(0.5, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.16);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.16);
+      } catch(e) {}
+    }
+
+    // Play cheerful success fanfare
+    function playSuccessChime() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          const startTime = audioCtx.currentTime + idx * 0.09;
+          gain.gain.setValueAtTime(0.3, startTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.28);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(startTime);
+          osc.stop(startTime + 0.3);
+        });
+      } catch(e) {}
+    }
+
+    // Play funny gentle "Oops / Try again" spring sound
+    function playOopsSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.22);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.22);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.23);
+      } catch(e) {}
+    }
+
+    // Monster giggle synth sound
+    function playGiggleSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const times = [0, 0.08, 0.16, 0.24, 0.32];
+        times.forEach((t, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = (i % 2 === 0) ? 680 : 820;
+          const st = audioCtx.currentTime + t;
+          gain.gain.setValueAtTime(0.25, st);
+          gain.gain.exponentialRampToValueAtTime(0.01, st + 0.06);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(st);
+          osc.stop(st + 0.07);
+        });
+      } catch(e) {}
+    }
+
+    /* =====================================================================
+       2. TEXT-TO-SPEECH (For 4-Year-Olds who cannot read yet!)
+       Uses Web Speech API to cheerfully read prompts aloud
+       ===================================================================== */
+    let currentPromptText = "";
+
+    function speakText(text) {
+      if (!soundEnabled) return;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel(); // Stop any pending speech
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 0.95;  // Slightly slower for 4yo comprehension
+        utter.pitch = 1.35; // Cheerful friendly high-tone voice
+        
+        // Find friendly voice if available
+        const voices = window.speechSynthesis.getVoices();
+        const childFriendly = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Kid') || v.name.includes('Zira') || v.name.includes('Samantha')));
+        if (childFriendly) utter.voice = childFriendly;
+
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    function speakCurrentPrompt() {
+      if (currentPromptText) {
+        speakText(currentPromptText);
+        const box = document.getElementById('game-prompt-box');
+        box.classList.remove('boing-animate');
+        void box.offsetWidth;
+        box.classList.add('boing-animate');
+      }
+    }
+
+    /* =====================================================================
+       3. GAME STATE & REWARD LOGIC
+       ===================================================================== */
+    let stars = parseInt(localStorage.getItem('giggles_stars') || '0');
+    let currentGame = null;
+
+    const stats = {
+      sorting: parseInt(localStorage.getItem('giggles_stat_sorting') || '0'),
+      odd: parseInt(localStorage.getItem('giggles_stat_odd') || '0'),
+      memory: parseInt(localStorage.getItem('giggles_stat_memory') || '0'),
+      counting: parseInt(localStorage.getItem('giggles_stat_counting') || '0'),
+      size: parseInt(localStorage.getItem('giggles_stat_size') || '0')
+    };
+
+    function updateStarsDisplay() {
+      document.getElementById('stars-count').textContent = stars;
+      localStorage.setItem('giggles_stars', stars);
+    }
+    updateStarsDisplay();
+
+    function addStar(amount = 1) {
+      stars += amount;
+      updateStarsDisplay();
+      playSuccessChime();
+      launchConfetti();
+
+      // Show floating star bonus
+      const starElem = document.getElementById('stars-display');
+      starElem.classList.remove('boing-animate');
+      void starElem.offsetWidth;
+      starElem.classList.add('boing-animate');
+    }
+
+    function recordStat(type) {
+      if (stats[type] !== undefined) {
+        stats[type]++;
+        localStorage.setItem('giggles_stat_' + type, stats[type]);
+      }
+    }
+
+    /* =====================================================================
+       4. EYE-TRACKING MASCOT (Googly Interactive Eyes)
+       ===================================================================== */
+    function initEyeTracking() {
+      window.addEventListener('mousemove', (e) => {
+        updatePupils(e.clientX, e.clientY);
+      });
+      window.addEventListener('touchmove', (e) => {
+        if (e.touches[0]) {
+          updatePupils(e.touches[0].clientX, e.touches[0].clientY);
+        }
+      });
+    }
+
+    function updatePupils(clientX, clientY) {
+      const leftPupil = document.getElementById('pupil-left');
+      const rightPupil = document.getElementById('pupil-right');
+      if (!leftPupil || !rightPupil) return;
+
+      const mascot = document.getElementById('mascot-svg');
+      if (!mascot) return;
+      const rect = mascot.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+
+      const dx = clientX - centerX;
+      const dy = clientY - centerY;
+      const angle = Math.atan2(dy, dx);
+      const dist = Math.min(5, Math.hypot(dx, dy) / 30);
+
+      const px = Math.cos(angle) * dist;
+      const py = Math.sin(angle) * dist;
+
+      leftPupil.setAttribute('cx', 75 + px);
+      leftPupil.setAttribute('cy', 88 + py);
+      rightPupil.setAttribute('cx', 125 + px);
+      rightPupil.setAttribute('cy', 88 + py);
+    }
+    initEyeTracking();
+
+    const funnyTickleLines = [
+      "Hehehe! That tickles! Tickle tickle!",
+      "Wheee! You are so funny! Play with me!",
+      "Boing! I'm Giggles the Brain Monster!",
+      "Yippee! You give the best high fives!",
+      "Giggle giggle snort! Let's solve a puzzle!"
+    ];
+
+    function tickleMonster() {
+      playGiggleSound();
+      const avatar = document.getElementById('main-mascot');
+      avatar.classList.remove('boing-animate');
+      void avatar.offsetWidth;
+      avatar.classList.add('boing-animate');
+
+      const mouth = document.getElementById('mascot-mouth');
+      if (mouth) {
+        mouth.setAttribute('d', 'M 75 115 Q 100 155 125 115'); // huge smile
+        setTimeout(() => {
+          mouth.setAttribute('d', 'M 80 120 Q 100 145 120 120');
+        }, 800);
+      }
+
+      const randomLine = funnyTickleLines[Math.floor(Math.random() * funnyTickleLines.length)];
+      document.getElementById('hub-bubble').textContent = randomLine;
+      speakText(randomLine);
+    }
+
+    /* =====================================================================
+       5. CONFETTI CELEBRATION ENGINE
+       ===================================================================== */
+    const canvas = document.getElementById('confetti-canvas');
+    const ctx = canvas.getContext('2d');
+    let confettiParticles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function launchConfetti() {
+      const colors = ['#FF5E7E', '#FFD93D', '#6BCB77', '#4D96FF', '#9D4EDD', '#FF923C'];
+      for (let i = 0; i < 45; i++) {
+        confettiParticles.push({
+          x: canvas.width / 2 + (Math.random() - 0.5) * 200,
+          y: canvas.height / 2 - 50,
+          w: Math.random() * 12 + 6,
+          h: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          vx: (Math.random() - 0.5) * 12,
+          vy: Math.random() * -10 - 6,
+          rot: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 15,
+          opacity: 1
+        });
+      }
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = confettiParticles.length - 1; i >= 0; i--) {
+        const p = confettiParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35; // Gravity
+        p.rot += p.rotSpeed;
+        p.opacity -= 0.015;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rot * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.opacity);
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+
+        if (p.opacity <= 0 || p.y > canvas.height) {
+          confettiParticles.splice(i, 1);
+        }
+      }
+      requestAnimationFrame(animateConfetti);
+    }
+    animateConfetti();
+
+    /* =====================================================================
+       6. NAVIGATION & SCREEN SWITCHING
+       ===================================================================== */
+    function goToHub() {
+      playPopSound();
+      document.getElementById('hub-screen').style.display = 'flex';
+      document.getElementById('game-arena').style.display = 'none';
+      if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+      currentGame = null;
+    }
+
+    function showGameArena(title, icon, promptText) {
+      document.getElementById('hub-screen').style.display = 'none';
+      const arena = document.getElementById('game-arena');
+      arena.style.display = 'flex';
+      document.getElementById('arena-title').textContent = title;
+      document.getElementById('arena-icon').textContent = icon;
+      setPrompt(promptText);
+    }
+
+    function setPrompt(text) {
+      currentPromptText = text;
+      document.getElementById('game-prompt-text').textContent = text;
+      speakText(text);
+    }
+
+    function replayCurrentGame() {
+      playPopSound();
+      if (currentGame === 'feed') startFeedGame();
+      else if (currentGame === 'odd') startOddGame();
+      else if (currentGame === 'memory') startMemoryGame();
+      else if (currentGame === 'pop') startPopGame();
+      else if (currentGame === 'size') startSizeGame();
+      else if (currentGame === 'dress') startDressGame();
+    }
+
+    /* =====================================================================
+       7. MINI-GAME 1: FEED HUNGRY BOBO (Sorting & Attribute Logic)
+       Milestone: Categorize items by color, food vs non-food, or shapes
+       ===================================================================== */
+    const feedCategories = [
+      {
+        prompt: "Hungry Bobo wants RED yummy fruits!",
+        validRule: item => item.color === 'red' && item.type === 'fruit',
+        options: [
+          { emoji: "🍎", name: "Red Apple", color: "red", type: "fruit" },
+          { emoji: "🍓", name: "Strawberry", color: "red", type: "fruit" },
+          { emoji: "🥦", name: "Broccoli", color: "green", type: "veg" },
+          { emoji: "🍌", name: "Banana", color: "yellow", type: "fruit" }
+        ]
+      },
+      {
+        prompt: "Feed Bobo YELLOW tasty foods!",
+        validRule: item => item.color === 'yellow',
+        options: [
+          { emoji: "🍌", name: "Banana", color: "yellow", type: "fruit" },
+          { emoji: "🧀", name: "Cheese", color: "yellow", type: "dairy" },
+          { emoji: "🍇", name: "Grapes", color: "purple", type: "fruit" },
+          { emoji: "🚗", name: "Toy Car", color: "red", type: "toy" }
+        ]
+      },
+      {
+        prompt: "Bobo wants CRUNCHY GREEN veggies!",
+        validRule: item => item.color === 'green',
+        options: [
+          { emoji: "🥦", name: "Broccoli", color: "green", type: "veg" },
+          { emoji: "🥒", name: "Cucumber", color: "green", type: "veg" },
+          { emoji: "🍰", name: "Cake", color: "pink", type: "sweet" },
+          { emoji: "🍎", name: "Apple", color: "red", type: "fruit" }
+        ]
+      },
+      {
+        prompt: "Feed Bobo ROUND CIRCLE shapes!",
+        validRule: item => item.shape === 'circle',
+        options: [
+          { emoji: "🍩", name: "Donut", shape: "circle" },
+          { emoji: "⚽", name: "Soccer Ball", shape: "circle" },
+          { emoji: "📦", name: "Cardboard Box", shape: "square" },
+          { emoji: "📐", name: "Ruler", shape: "triangle" }
+        ]
+      }
+    ];
+
+    let currentFeedRound = 0;
+    let feedRemainingTarget = 0;
+
+    function startFeedGame() {
+      currentGame = 'feed';
+      const round = feedCategories[currentFeedRound % feedCategories.length];
+      currentFeedRound++;
+      showGameArena("Feed Hungry Bobo", "🍉", round.prompt);
+
+      feedRemainingTarget = round.options.filter(round.validRule).length;
+
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="feed-container">
+          <div class="feed-monster-target" id="bobo-target">
+            <svg viewBox="0 0 200 200" width="100%" height="100%" id="bobo-svg">
+              <ellipse cx="100" cy="110" rx="75" ry="65" fill="#4D96FF" />
+              <circle cx="65" cy="80" r="16" fill="white" />
+              <circle cx="65" cy="80" r="7" fill="#0F172A" />
+              <circle cx="135" cy="80" r="16" fill="white" />
+              <circle cx="135" cy="80" r="7" fill="#0F172A" />
+              <ellipse cx="100" cy="130" rx="36" ry="25" fill="#1E293B" id="bobo-mouth" />
+              <path d="M 85 110 Q 100 125 115 110" fill="#F87171" />
+            </svg>
+          </div>
+          <p style="font-weight: 800; color: #475569; font-size: 1.1rem;">Tap the correct food to feed Bobo!</p>
+          <div class="feed-items-rack" id="feed-rack"></div>
+        </div>
+      `;
+
+      const rack = document.getElementById('feed-rack');
+      // Shuffle options
+      const shuffled = [...round.options].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach((item, index) => {
+        const btn = document.createElement('div');
+        btn.className = 'feed-choice-item';
+        btn.textContent = item.emoji;
+        btn.title = item.name;
+        btn.onclick = () => handleFeedPick(item, btn, round);
+        rack.appendChild(btn);
+      });
+    }
+
+    function handleFeedPick(item, elem, round) {
+      if (elem.style.visibility === 'hidden') return;
+
+      const target = document.getElementById('bobo-target');
+      const mouth = document.getElementById('bobo-mouth');
+
+      if (round.validRule(item)) {
+        // Correct item!
+        playChompSound();
+        target.classList.add('eating');
+        mouth.setAttribute('ry', '34');
+        elem.style.transform = 'scale(0.1) translateY(-100px)';
+        elem.style.opacity = '0';
+        setTimeout(() => {
+          elem.style.visibility = 'hidden';
+          mouth.setAttribute('ry', '25');
+          target.classList.remove('eating');
+        }, 300);
+
+        feedRemainingTarget--;
+        speakText("Yum yum yum! So delicious!");
+
+        if (feedRemainingTarget <= 0) {
+          recordStat('sorting');
+          setTimeout(() => {
+            addStar(1);
+            setPrompt("🎉 YAY! Bobo's tummy is happy and full! Great thinking!");
+            speakText("Yay! Bobo is full! You are a genius!");
+          }, 450);
+        }
+      } else {
+        // Oops item
+        playOopsSound();
+        target.classList.remove('boing-animate');
+        void target.offsetWidth;
+        target.classList.add('boing-animate');
+        speakText("Uh oh! Bobo doesn't eat that one! Try another!");
+      }
+    }
+
+    /* =====================================================================
+       8. MINI-GAME 2: SPOT THE ODD ONE OUT (Critical Differentiation)
+       Milestone: Spot difference in category, orientation, color, or species
+       ===================================================================== */
+    const oddPuzzles = [
+      {
+        prompt: "Which one does NOT belong? Find the silly odd one!",
+        items: [
+          { emoji: "🐱", isOdd: false, reason: "Kitty" },
+          { emoji: "🐱", isOdd: false, reason: "Kitty" },
+          { emoji: "🐸", isOdd: true, reason: "Froggy is different!" },
+          { emoji: "🐱", isOdd: false, reason: "Kitty" }
+        ]
+      },
+      {
+        prompt: "Look closely! Which color is NOT like the others?",
+        items: [
+          { emoji: "🚗", isOdd: false, color: "red" },
+          { emoji: "🚗", isOdd: false, color: "red" },
+          { emoji: "🚗", isOdd: false, color: "red" },
+          { emoji: "🚙", isOdd: true, color: "blue", reason: "Blue car is odd one!" }
+        ]
+      },
+      {
+        prompt: "Three are delicious fruits. Which one is a TOY?",
+        items: [
+          { emoji: "🍌", isOdd: false },
+          { emoji: "🧸", isOdd: true, reason: "Teddy bear is a toy, not food!" },
+          { emoji: "🍎", isOdd: false },
+          { emoji: "🍇", isOdd: false }
+        ]
+      },
+      {
+        prompt: "Find the odd animal who lives in the WATER!",
+        items: [
+          { emoji: "🦁", isOdd: false },
+          { emoji: "🐯", isOdd: false },
+          { emoji: "🐙", isOdd: true, reason: "Octopus swims in the ocean!" },
+          { emoji: "🐻", isOdd: false }
+        ]
+      },
+      {
+        prompt: "Which one flies in the sky with wings?",
+        items: [
+          { emoji: "🐶", isOdd: false },
+          { emoji: "🦋", isOdd: true, reason: "Butterfly has wings and flies!" },
+          { emoji: "🐰", isOdd: false },
+          { emoji: "🐱", isOdd: false }
+        ]
+      }
+    ];
+
+    let currentOddRound = 0;
+
+    function startOddGame() {
+      currentGame = 'odd';
+      const puzzle = oddPuzzles[currentOddRound % oddPuzzles.length];
+      currentOddRound++;
+      showGameArena("Spot the Odd One", "🔍", puzzle.prompt);
+
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="odd-grid" id="odd-grid"></div>
+      `;
+
+      const grid = document.getElementById('odd-grid');
+      // Shuffle positions
+      const shuffled = [...puzzle.items].sort(() => Math.random() - 0.5);
+
+      shuffled.forEach((item) => {
+        const card = document.createElement('div');
+        card.className = 'odd-card';
+        card.textContent = item.emoji;
+        card.onclick = () => handleOddClick(item, card, puzzle);
+        grid.appendChild(card);
+      });
+    }
+
+    function handleOddClick(item, card, puzzle) {
+      if (item.isOdd) {
+        card.style.borderColor = '#6BCB77';
+        card.style.background = '#E8F5E9';
+        card.classList.add('boing-animate');
+        recordStat('odd');
+        addStar(1);
+        setPrompt("🌟 SUPER DETECTIVE! You found the odd one!");
+        speakText("Awesome job! You found the odd one!");
+      } else {
+        playOopsSound();
+        card.classList.remove('boing-animate');
+        void card.offsetWidth;
+        card.classList.add('boing-animate');
+        speakText("Oops! Those three are friends! Find the one that's different!");
+      }
+    }
+
+    /* =====================================================================
+       9. MINI-GAME 3: ANIMAL PEEK-A-BOO (Working Memory & Recall)
+       Milestone: 2x2 or 2x3 cards to boost short-term visual memory
+       ===================================================================== */
+    const animalIcons = ["🐶", "🐱", "🐰", "🦁", "🐵", "🦆"];
+    let memoryFlipped = [];
+    let memoryMatchedCount = 0;
+    let memoryLock = false;
+
+    function startMemoryGame() {
+      currentGame = 'memory';
+      showGameArena("Animal Peek-a-Boo", "🐵", "Tap two cards to find the matching animal friends!");
+
+      memoryFlipped = [];
+      memoryMatchedCount = 0;
+      memoryLock = false;
+
+      // For 4-year-olds: 3 pairs (6 cards) is the perfect sweet spot for memory
+      const selectedAnimals = animalIcons.slice(0, 3);
+      const deck = [...selectedAnimals, ...selectedAnimals].sort(() => Math.random() - 0.5);
+
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="memory-grid" id="memory-grid" style="grid-template-columns: repeat(3, 1fr);"></div>
+      `;
+
+      const grid = document.getElementById('memory-grid');
+      deck.forEach((animal, idx) => {
+        const card = document.createElement('div');
+        card.className = 'memory-card';
+        card.dataset.animal = animal;
+        card.dataset.index = idx;
+        card.innerHTML = `
+          <div class="card-face-back">❓</div>
+          <div class="card-face-front">${animal}</div>
+        `;
+        card.onclick = () => handleMemoryFlip(card);
+        grid.appendChild(card);
+      });
+    }
+
+    function handleMemoryFlip(card) {
+      if (memoryLock || card.classList.contains('revealed') || card.classList.contains('matched')) return;
+
+      playPopSound();
+      card.classList.add('revealed');
+      memoryFlipped.push(card);
+
+      if (memoryFlipped.length === 2) {
+        memoryLock = true;
+        const [card1, card2] = memoryFlipped;
+
+        if (card1.dataset.animal === card2.dataset.animal) {
+          // Matched!
+          playSuccessChime();
+          card1.classList.add('matched');
+          card2.classList.add('matched');
+          memoryFlipped = [];
+          memoryLock = false;
+          memoryMatchedCount++;
+
+          speakText("You found a match! Hooray!");
+
+          if (memoryMatchedCount === 3) {
+            recordStat('memory');
+            setTimeout(() => {
+              addStar(1);
+              setPrompt("🎉 AMAZING BRAIN POWER! You matched all the animals!");
+              speakText("You did it! All animals are matched!");
+            }, 500);
+          }
+        } else {
+          // Not matched
+          playOopsSound();
+          setTimeout(() => {
+            card1.classList.remove('revealed');
+            card2.classList.remove('revealed');
+            memoryFlipped = [];
+            memoryLock = false;
+          }, 900);
+        }
+      }
+    }
+
+    /* =====================================================================
+       10. MINI-GAME 4: RAINBOW BALLOON POP (Number Sense & Focus)
+       Milestone: Counting 1 to 5, hand-eye coordination
+       ===================================================================== */
+    let balloonsPopped = 0;
+    let targetBalloonCount = 4;
+    let balloonSpawnInterval = null;
+
+    function startPopGame() {
+      currentGame = 'pop';
+      targetBalloonCount = Math.floor(Math.random() * 3) + 3; // 3 to 5 balloons
+      balloonsPopped = 0;
+      showGameArena("Rainbow Balloon Pop", "🎈", `Pop ${targetBalloonCount} floating rainbow balloons!`);
+
+      if (balloonSpawnInterval) clearInterval(balloonSpawnInterval);
+
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="balloon-stage" id="balloon-stage"></div>
+        <div style="margin-top: 12px; font-weight: 800; font-size: 1.2rem; color: #0284C7;" id="pop-counter-text">
+          Popped: 0 of ${targetBalloonCount}
+        </div>
+      `;
+
+      spawnBalloon();
+      balloonSpawnInterval = setInterval(spawnBalloon, 1400);
+    }
+
+    const balloonColors = ['#FF5E7E', '#4D96FF', '#6BCB77', '#FFD93D', '#9D4EDD', '#FF923C'];
+
+    function spawnBalloon() {
+      const stage = document.getElementById('balloon-stage');
+      if (!stage || currentGame !== 'pop') {
+        if (balloonSpawnInterval) clearInterval(balloonSpawnInterval);
+        return;
+      }
+
+      const balloon = document.createElement('div');
+      balloon.className = 'floating-balloon';
+      const color = balloonColors[Math.floor(Math.random() * balloonColors.length)];
+      balloon.style.backgroundColor = color;
+      balloon.style.borderColor = color;
+
+      const left = Math.random() * (stage.clientWidth - 90);
+      balloon.style.left = Math.max(10, left) + 'px';
+
+      const duration = Math.random() * 2 + 3.8; // 3.8s to 5.8s
+      balloon.style.animationDuration = duration + 's';
+
+      balloon.innerHTML = `
+        <span>🎈</span>
+        <div class="balloon-string"></div>
+      `;
+
+      balloon.onclick = (e) => {
+        e.stopPropagation();
+        popBalloonItem(balloon);
+      };
+
+      stage.appendChild(balloon);
+
+      // Clean up if floated off screen
+      setTimeout(() => {
+        if (balloon && balloon.parentNode) balloon.remove();
+      }, duration * 1000);
+    }
+
+    function popBalloonItem(balloon) {
+      if (balloon.dataset.popped) return;
+      balloon.dataset.popped = "true";
+
+      playPopSound();
+      balloon.style.transform = 'scale(1.4)';
+      balloon.style.opacity = '0';
+      balloon.style.transition = 'all 0.15s ease-out';
+
+      balloonsPopped++;
+      document.getElementById('pop-counter-text').textContent = `Popped: ${balloonsPopped} of ${targetBalloonCount}`;
+      speakText(balloonsPopped.toString());
+
+      setTimeout(() => {
+        if (balloon.parentNode) balloon.remove();
+      }, 150);
+
+      if (balloonsPopped >= targetBalloonCount) {
+        if (balloonSpawnInterval) clearInterval(balloonSpawnInterval);
+        recordStat('counting');
+        setTimeout(() => {
+          addStar(1);
+          setPrompt(`🌟 YAY! You popped all ${targetBalloonCount} balloons like a champion!`);
+          speakText(`Hooray! You popped all ${targetBalloonCount} balloons!`);
+        }, 300);
+      }
+    }
+
+    /* =====================================================================
+       11. MINI-GAME 5: SMALL TO BIG SAFARI (Size & Spatial Ordering)
+       Milestone: Understand comparative analytics (small, medium, big)
+       ===================================================================== */
+    const sizePuzzles = [
+      { name: "Teddy Bears", icon: "🧸" },
+      { name: "Little Kittens", icon: "🐱" },
+      { name: "Friendly Stars", icon: "⭐" },
+      { name: "Yummy Apples", icon: "🍎" }
+    ];
+
+    let currentSizeRound = 0;
+    let sizePlacedOrder = [];
+
+    function startSizeGame() {
+      currentGame = 'size';
+      const puzzle = sizePuzzles[currentSizeRound % sizePuzzles.length];
+      currentSizeRound++;
+      showGameArena("Small to Big Safari", "🐻", "Put them in order from SMALLEST to BIGGEST!");
+
+      sizePlacedOrder = [];
+
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="size-stage">
+          <div class="size-slots">
+            <div class="size-slot slot-small" id="slot-1">
+              <span class="size-slot-label">1. Small</span>
+            </div>
+            <div class="size-slot slot-medium" id="slot-2">
+              <span class="size-slot-label">2. Medium</span>
+            </div>
+            <div class="size-slot slot-big" id="slot-3">
+              <span class="size-slot-label">3. Biggest</span>
+            </div>
+          </div>
+          <p style="font-weight: 800; color: #475569;">Tap the smallest one first!</p>
+          <div class="size-items-pool" id="size-pool"></div>
+        </div>
+      `;
+
+      const pool = document.getElementById('size-pool');
+      // 3 sizes: 1 (small), 2 (medium), 3 (big)
+      const items = [
+        { size: 1, label: "Small", fontSize: "2.5rem" },
+        { size: 2, label: "Medium", fontSize: "4.2rem" },
+        { size: 3, label: "Big", fontSize: "6.2rem" }
+      ].sort(() => Math.random() - 0.5); // Shuffle
+
+      items.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'size-item';
+        el.style.fontSize = item.fontSize;
+        el.textContent = puzzle.icon;
+        el.dataset.size = item.size;
+        el.onclick = () => handleSizePick(item, el);
+        pool.appendChild(el);
+      });
+    }
+
+    function handleSizePick(item, elem) {
+      if (elem.style.visibility === 'hidden') return;
+
+      const expectedNext = sizePlacedOrder.length + 1; // 1, then 2, then 3
+
+      if (item.size === expectedNext) {
+        // Correct step!
+        playPopSound();
+        sizePlacedOrder.push(item.size);
+        const targetSlot = document.getElementById(`slot-${expectedNext}`);
+        elem.style.visibility = 'hidden';
+
+        const placed = document.createElement('div');
+        placed.textContent = elem.textContent;
+        placed.style.fontSize = elem.style.fontSize;
+        placed.classList.add('boing-animate');
+        targetSlot.appendChild(placed);
+
+        if (sizePlacedOrder.length === 3) {
+          recordStat('size');
+          setTimeout(() => {
+            addStar(1);
+            setPrompt("🏆 PERFECT ORDER! You sorted Small, Medium, and Big!");
+            speakText("Perfect! Small, Medium, and Big! High five!");
+          }, 350);
+        } else {
+          speakText("Great! Now tap the next bigger one!");
+        }
+      } else {
+        // Incorrect size picked
+        playOopsSound();
+        elem.classList.remove('boing-animate');
+        void elem.offsetWidth;
+        elem.classList.add('boing-animate');
+        if (expectedNext === 1) {
+          speakText("Look for the tiniest, smallest one first!");
+        } else if (expectedNext === 2) {
+          speakText("Find the medium size in the middle!");
+        }
+      }
+    }
+
+    /* =====================================================================
+       12. BONUS ROOM: SILLY DRESS-UP STUDIO (Motivation & Reward)
+       ===================================================================== */
+    const wardrobeItems = [
+      { id: 'sunglasses', icon: '🕶️', name: 'Cool Shades', starCost: 0 },
+      { id: 'party_hat', icon: '🥳', name: 'Party Cone', starCost: 1 },
+      { id: 'crown', icon: '👑', name: 'Golden Crown', starCost: 2 },
+      { id: 'chef', icon: '👨‍🍳', name: 'Chef Hat', starCost: 3 },
+      { id: 'pirate', icon: '🏴‍☠️', name: 'Pirate Hat', starCost: 5 },
+      { id: 'flower', icon: '🌸', name: 'Flower Pin', starCost: 7 }
+    ];
+
+    let currentHat = 'sunglasses';
+
+    function startDressGame() {
+      currentGame = 'dress';
+      showGameArena("Silly Dress-Up Studio", "🎩", "Pick a silly accessory for Giggles!");
+
+      const stage = document.getElementById('game-stage');
+      stage.innerHTML = `
+        <div class="wardrobe-container">
+          <div class="closet-character-stage">
+            <svg viewBox="0 0 200 200" width="100%" height="100%">
+              <circle cx="50" cy="50" r="20" fill="#FF8E53" />
+              <circle cx="150" cy="50" r="20" fill="#FF8E53" />
+              <ellipse cx="100" cy="115" rx="75" ry="70" fill="url(#bodyGrad)" />
+              <ellipse cx="100" cy="130" rx="48" ry="42" fill="url(#bellyGrad)" />
+              <circle cx="75" cy="88" r="16" fill="white" />
+              <circle cx="75" cy="88" r="7" fill="#1E293B" />
+              <circle cx="125" cy="88" r="16" fill="white" />
+              <circle cx="125" cy="88" r="7" fill="#1E293B" />
+              <path d="M 80 120 Q 100 145 120 120" stroke="#881337" stroke-width="5" stroke-linecap="round" fill="#E11D48" />
+            </svg>
+            <div id="wardrobe-hat-display" style="position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 3.8rem; pointer-events: none;">
+              ${getHatIcon(currentHat)}
+            </div>
+          </div>
+
+          <p style="font-weight: 800; color: #475569;">Win more stars in brain games to unlock new silly hats!</p>
+          <div class="wardrobe-items-grid" id="wardrobe-grid"></div>
+        </div>
+      `;
+
+      const grid = document.getElementById('wardrobe-grid');
+      wardrobeItems.forEach(item => {
+        const isLocked = stars < item.starCost;
+        const card = document.createElement('div');
+        card.className = `wardrobe-item-card ${currentHat === item.id ? 'equipped' : ''} ${isLocked ? 'locked' : ''}`;
+        card.textContent = item.icon;
+        card.title = isLocked ? `Requires ${item.starCost} stars` : item.name;
+
+        card.onclick = () => {
+          if (isLocked) {
+            playOopsSound();
+            speakText(`You need ${item.starCost} stars to unlock this! Play more games!`);
+          } else {
+            playPopSound();
+            currentHat = item.id;
+            document.getElementById('wardrobe-hat-display').textContent = item.icon;
+            document.querySelectorAll('.wardrobe-item-card').forEach(c => c.classList.remove('equipped'));
+            card.classList.add('equipped');
+            speakText(`Looking super silly with the ${item.name}!`);
+          }
+        };
+        grid.appendChild(card);
+      });
+    }
+
+    function getHatIcon(id) {
+      const found = wardrobeItems.find(w => w.id === id);
+      return found ? found.icon : '';
+    }
+
+    /* =====================================================================
+       13. PARENT MODAL & ANALYTICS VIEWER
+       ===================================================================== */
+    function openParentModal() {
+      playPopSound();
+      document.getElementById('stat-sorting').textContent = `${stats.sorting} played`;
+      document.getElementById('stat-odd').textContent = `${stats.odd} played`;
+      document.getElementById('stat-memory').textContent = `${stats.memory} played`;
+      document.getElementById('stat-counting').textContent = `${stats.counting} played`;
+      document.getElementById('stat-size').textContent = `${stats.size} played`;
+
+      document.getElementById('parent-modal').style.display = 'flex';
+    }
+
+    function closeParentModal(e) {
+      if (e && e.target !== e.currentTarget && !e.target.classList.contains('modal-close')) return;
+      document.getElementById('parent-modal').style.display = 'none';
+    }
+
+    // Auto-init greetings on first load
+    window.addEventListener('load', () => {
+      // First interaction handles AudioContext permissions
+      document.body.addEventListener('click', () => {
+        initAudio();
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>
