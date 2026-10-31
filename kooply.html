@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🏃 Kooply Run - Candy Subway Runner for Kids</title>
+  <style>
+    :root {
+      --primary: #FF5E7E;
+      --secondary: #4D96FF;
+      --accent: #FFD93D;
+      --success: #6BCB77;
+      --purple: #9D4EDD;
+      --choco: #8B4513;
+      --font-family: 'Comic Sans MS', 'Chalkboard SE', 'Quicksand', 'Nunito', system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      margin: 0;
+      padding: 0;
+      touch-action: manipulation;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: linear-gradient(180deg, #70C5FF 0%, #BAE6FD 60%, #FDE047 100%);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      color: #2D3748;
+    }
+
+    /* Top HUD */
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 50;
+      pointer-events: none;
+    }
+
+    .hud-group-left, .hud-group-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      pointer-events: auto;
+    }
+
+    .btn-nav {
+      background: white;
+      border: 3px solid #E2E8F0;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #334155;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .btn-nav:hover {
+      transform: scale(1.08);
+      border-color: var(--secondary);
+    }
+    .btn-nav:active {
+      transform: scale(0.95);
+    }
+
+    /* Collectibles Pill Counters */
+    .counter-pill {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      border: 3px solid white;
+      transition: transform 0.15s ease-out;
+    }
+    .counter-pill.choco-pill {
+      color: #8B4513;
+      border-color: #D97706;
+    }
+    .counter-pill.gem-pill {
+      color: #0284C7;
+      border-color: #38BDF8;
+    }
+    .counter-pill.dist-pill {
+      color: #7C3AED;
+      border-color: #C084FC;
+    }
+    .pill-bounce {
+      transform: scale(1.25) !important;
+    }
+
+    /* Active Power-up Status bar */
+    .powerup-tray {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 45;
+      pointer-events: none;
+    }
+    .powerup-badge {
+      background: white;
+      border-radius: 999px;
+      padding: 4px 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 900;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      animation: pulse 1s infinite alternate;
+    }
+
+    /* Main Game Canvas */
+    #game-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      touch-action: none;
+    }
+
+    /* On-Screen Touch Controls (Subway Surfers Style for Little Kids) */
+    .touch-controls-overlay {
+      position: absolute;
+      bottom: 12px;
+      left: 0;
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 60;
+      pointer-events: none;
+    }
+
+    .touch-btn-cluster {
+      display: flex;
+      gap: 14px;
+      pointer-events: auto;
+    }
+
+    .touch-btn {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 4px solid white;
+      font-size: 2rem;
+      font-weight: 900;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      cursor: pointer;
+      color: white;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      touch-action: manipulation;
+    }
+    .touch-btn:active, .touch-btn.pressed {
+      transform: scale(0.9);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    .touch-btn-label {
+      font-size: 0.62rem;
+      margin-top: -2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-left { background: linear-gradient(135deg, #4D96FF, #0066FF); }
+    .btn-right { background: linear-gradient(135deg, #4D96FF, #0066FF); }
+    .btn-jump {
+      width: 84px;
+      height: 84px;
+      background: linear-gradient(135deg, #10B981, #059669);
+    }
+    .btn-slide {
+      width: 84px;
+      height: 84px;
+      background: linear-gradient(135deg, #F59E0B, #D97706);
+    }
+
+    /* Big Start & Recap Overlay Modal */
+    .game-dialog-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
+    }
+
+    .dialog-card {
+      background: white;
+      border-radius: 36px;
+      padding: 28px 24px;
+      max-width: 440px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+      border: 6px solid #FFD93D;
+      animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+
+    .dialog-hero-icon {
+      font-size: 4.5rem;
+      margin-top: -10px;
+      animation: float 2.5s ease-in-out infinite alternate;
+    }
+
+    .dialog-title {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(45deg, #FF5E7E, #9D4EDD);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .dialog-subtitle {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #64748B;
+      margin-bottom: 18px;
+    }
+
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .stat-box {
+      background: #F8FAFC;
+      border-radius: 20px;
+      padding: 12px;
+      border: 3px solid #E2E8F0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .stat-box.stat-choco { border-color: #FBBF24; background: #FFFBEB; }
+    .stat-box.stat-gem { border-color: #38BDF8; background: #F0F9FF; }
+
+    .stat-box-val {
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+    .stat-box-lbl {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #64748B;
+      margin-top: 4px;
+    }
+
+    .btn-play-big {
+      background: linear-gradient(135deg, #10B981, #059669);
+      color: white;
+      font-size: 1.45rem;
+      font-weight: 900;
+      padding: 14px 36px;
+      border: 4px solid white;
+      border-radius: 999px;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+    }
+    .btn-play-big:hover {
+      transform: scale(1.08);
+      box-shadow: 0 14px 30px rgba(16, 185, 129, 0.5);
+    }
+    .btn-play-big:active {
+      transform: scale(0.95);
+    }
+
+    .btn-hub-link {
+      margin-top: 14px;
+      background: transparent;
+      border: none;
+      font-size: 1rem;
+      font-weight: 800;
+      color: #64748B;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-hub-link:hover {
+      color: var(--primary);
+    }
+
+    /* Floating Toast Voice Bubble */
+    .toast-speech {
+      position: absolute;
+      top: 110px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      border: 3px solid #38BDF8;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-weight: 900;
+      font-size: 1.1rem;
+      color: #0369A1;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      z-index: 55;
+      pointer-events: none;
+      display: none;
+      animation: floatBubble 1.5s ease-out infinite alternate;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes float {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+    @keyframes floatBubble {
+      from { transform: translate(-50%, 0); }
+      to { transform: translate(-50%, -6px); }
+    }
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.08); }
+    }
+
+    @media (max-width: 600px) {
+      .touch-btn { width: 62px; height: 62px; font-size: 1.7rem; }
+      .btn-jump, .btn-slide { width: 72px; height: 72px; }
+      .counter-pill { font-size: 1rem; padding: 4px 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation & Counters (Chocolates & Gems instead of stars!) -->
+  <header>
+    <div class="hud-group-left">
+      <button class="btn-nav" onclick="goHome()" title="Back to Brain Playground Hub">
+        <span>🏠</span> <span>Home</span>
+      </button>
+      <button class="btn-nav" id="sound-btn" onclick="toggleAudio()" title="Sound On / Off">
+        🔊
+      </button>
+    </div>
+
+    <div class="hud-group-right">
+      <!-- CHOCOLATE COUNTER 🍫 -->
+      <div class="counter-pill choco-pill" id="pill-choco" title="Chocolates Eaten!">
+        <span style="font-size: 1.4rem;">🍫</span>
+        <span id="hud-choco">0</span>
+      </div>
+
+      <!-- GEMS COUNTER 💎 -->
+      <div class="counter-pill gem-pill" id="pill-gem" title="Shiny Gems Found!">
+        <span style="font-size: 1.3rem;">💎</span>
+        <span id="hud-gem">0</span>
+      </div>
+
+      <!-- DISTANCE COUNTER 🏃 -->
+      <div class="counter-pill dist-pill" title="Meters Run!">
+        <span style="font-size: 1.2rem;">🏃</span>
+        <span id="hud-dist">0m</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Powerup active timer tray -->
+  <div class="powerup-tray" id="powerup-tray"></div>
+
+  <!-- Toast Speech Bubble for Funny Voice Lines -->
+  <div class="toast-speech" id="toast-bubble">Yum! Chocolate!</div>
+
+  <!-- Main 3D Canvas -->
+  <canvas id="game-canvas"></canvas>
+
+  <!-- On-Screen Touch Controls (Giant buttons for tablet & mobile toddlers) -->
+  <div class="touch-controls-overlay">
+    <!-- Left / Right Lanes -->
+    <div class="touch-btn-cluster">
+      <button class="touch-btn btn-left" id="btn-left" onpointerdown="handleTouchAction('left', event)">
+        <span>⬅️</span>
+        <span class="touch-btn-label">Left</span>
+      </button>
+      <button class="touch-btn btn-right" id="btn-right" onpointerdown="handleTouchAction('right', event)">
+        <span>➡️</span>
+        <span class="touch-btn-label">Right</span>
+      </button>
+    </div>
+
+    <!-- Jump / Slide -->
+    <div class="touch-btn-cluster">
+      <button class="touch-btn btn-jump" id="btn-jump" onpointerdown="handleTouchAction('jump', event)">
+        <span>⬆️</span>
+        <span class="touch-btn-label">Jump</span>
+      </button>
+      <button class="touch-btn btn-slide" id="btn-slide" onpointerdown="handleTouchAction('slide', event)">
+        <span>⬇️</span>
+        <span class="touch-btn-label">Slide</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- START & GAME RECAP MODAL DIALOG -->
+  <div class="game-dialog-overlay" id="game-dialog">
+    <div class="dialog-card">
+      <div class="dialog-hero-icon" id="dialog-hero-icon">🍫🏃</div>
+      <h1 class="dialog-title" id="dialog-title">Kooply Run!</h1>
+      <p class="dialog-subtitle" id="dialog-subtitle">
+        Subway Candy Runner: Dash, Jump & Grab Chocolates & Gems!
+      </p>
+
+      <div class="stats-summary-grid" id="dialog-stats-grid" style="display: none;">
+        <div class="stat-box stat-choco">
+          <span style="font-size: 2rem;">🍫</span>
+          <span class="stat-box-val" id="recap-choco" style="color: #B45309;">0</span>
+          <span class="stat-box-lbl">Chocolates YUM!</span>
+        </div>
+        <div class="stat-box stat-gem">
+          <span style="font-size: 2rem;">💎</span>
+          <span class="stat-box-val" id="recap-gem" style="color: #0284C7;">0</span>
+          <span class="stat-box-lbl">Sparkling Gems!</span>
+        </div>
+      </div>
+
+      <button class="btn-play-big" onclick="startGame()">
+        <span id="play-btn-text">Let's Run! 🏃</span>
+      </button>
+
+      <button class="btn-hub-link" onclick="goHome()">
+        <span>🏠</span> <span>Back to Brain Playground</span>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    /* =====================================================================
+       1. SYNTHETIC AUDIO ENGINE (Web Audio API) - 100% Offline Cartoon Sounds!
+       ===================================================================== */
+    let audioCtx = null;
+    let soundEnabled = true;
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      document.getElementById('sound-btn').textContent = soundEnabled ? '🔊' : '🔇';
+      if (soundEnabled) playPopSound();
+    }
+
+    // Lane switch whoosh
+    function playWhooshSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(260, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(520, audioCtx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.11);
+      } catch(e) {}
+    }
+
+    // Springy Jump Boing
+    function playJumpSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(320, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(750, audioCtx.currentTime + 0.22);
+        gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.22);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.23);
+      } catch(e) {}
+    }
+
+    // Slide Swoosh
+    function playSlideSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.2);
+        gain.gain.setValueAtTime(0.35, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.21);
+      } catch(e) {}
+    }
+
+    // Chocolate Munch / Chomp sound!
+    function playChocoSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(190, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(110, audioCtx.currentTime + 0.12);
+        gain.gain.setValueAtTime(0.45, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.13);
+      } catch(e) {}
+    }
+
+    // Sparkly Gem Chime!
+    function playGemSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const notes = [659.25, 880, 1174.66]; // E5, A5, D6
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = freq;
+          const st = audioCtx.currentTime + idx * 0.05;
+          gain.gain.setValueAtTime(0.3, st);
+          gain.gain.exponentialRampToValueAtTime(0.01, st + 0.2);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(st);
+          osc.stop(st + 0.21);
+        });
+      } catch(e) {}
+    }
+
+    // Powerup Fanfare
+    function playPowerupSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const freqs = [440, 554, 659, 880];
+        freqs.forEach((f, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.value = f;
+          const st = audioCtx.currentTime + i * 0.08;
+          gain.gain.setValueAtTime(0.35, st);
+          gain.gain.exponentialRampToValueAtTime(0.01, st + 0.25);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(st);
+          osc.stop(st + 0.26);
+        });
+      } catch(e) {}
+    }
+
+    // Funny stumble wobble (zero scary death!)
+    function playStumbleSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const times = [0, 0.1, 0.2, 0.3];
+        times.forEach((t, i) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.value = (i % 2 === 0) ? 350 : 250;
+          const st = audioCtx.currentTime + t;
+          gain.gain.setValueAtTime(0.3, st);
+          gain.gain.exponentialRampToValueAtTime(0.01, st + 0.09);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(st);
+          osc.stop(st + 0.1);
+        });
+      } catch(e) {}
+    }
+
+    function playPopSound() {
+      if (!soundEnabled) return;
+      initAudio();
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(450, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(900, audioCtx.currentTime + 0.08);
+        gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.09);
+      } catch(e) {}
+    }
+
+    /* =====================================================================
+       2. TEXT-TO-SPEECH FOR 4-YEAR-OLD ENCOURAGEMENT
+       ===================================================================== */
+    let lastSpokenMilestone = 0;
+
+    function speakToast(text) {
+      const bubble = document.getElementById('toast-bubble');
+      bubble.textContent = text;
+      bubble.style.display = 'block';
+      setTimeout(() => { bubble.style.display = 'none'; }, 1800);
+
+      if (!soundEnabled) return;
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1.0;
+        utter.pitch = 1.35;
+        const voices = window.speechSynthesis.getVoices();
+        const childVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Natural') || v.name.includes('Kid') || v.name.includes('Zira') || v.name.includes('Samantha')));
+        if (childVoice) utter.voice = childVoice;
+        window.speechSynthesis.speak(utter);
+      }
+    }
+
+    /* =====================================================================
+       3. GAME PERSISTENCE & DATA
+       ===================================================================== */
+    let totalChocos = parseInt(localStorage.getItem('kooply_chocos') || '0');
+    let totalGems = parseInt(localStorage.getItem('kooply_gems') || '0');
+
+    function saveStats(runChocos, runGems) {
+      totalChocos += runChocos;
+      totalGems += runGems;
+      localStorage.setItem('kooply_chocos', totalChocos);
+      localStorage.setItem('kooply_gems', totalGems);
+    }
+
+    function goHome() {
+      playPopSound();
+      window.location.href = 'index.html';
+    }
+
+    /* =====================================================================
+       4. 3D PERSPECTIVE CANVASES & RUNNER ENGINE
+       ===================================================================== */
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let gameActive = false;
+    let distanceRun = 0;
+    let runChocos = 0;
+    let runGems = 0;
+    let speed = 420; // Units per second
+    let animFrameId = null;
+    let lastTime = 0;
+
+    // 3 Lanes: -1 (Left), 0 (Center), +1 (Right)
+    const LANE_WIDTH = 135;
+    let targetLane = 0;
+    let playerX = 0; // smoothly lerps to targetLane * LANE_WIDTH
+    let playerY = 0; // Height off ground for jumps
+    let playerVy = 0;
+    const GRAVITY = 1800;
+    const JUMP_VELOCITY = 780;
+    let isSliding = false;
+    let slideTimer = 0;
+
+    // Power-ups
+    let magnetTimer = 0;
+    let jetpackTimer = 0;
+    let shoesTimer = 0;
+    let shieldActive = false;
+
+    // Track objects
+    let trackItems = []; // Collectibles (Chocolates, Gems) & Obstacles & Power-ups
+    let spawnTimer = 0;
+    let groundOffset = 0; // for road texture motion
+
+    // Visual scenery
+    const sceneryItems = [];
+    for (let i = 0; i < 20; i++) {
+      sceneryItems.push({
+        side: i % 2 === 0 ? -1 : 1,
+        distX: 280 + Math.random() * 80,
+        z: i * 180 + Math.random() * 80,
+        type: (i % 3 === 0) ? 'candy_cane' : ((i % 3 === 1) ? 'lollipop' : 'cupcake'),
+        scale: 0.9 + Math.random() * 0.4
+      });
+    }
+
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = window.innerWidth * dpr;
+      canvas.height = window.innerHeight * dpr;
+      ctx.scale(dpr, dpr);
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // 3D Perspective Projection Function
+    function project3D(x, y, z) {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const fov = 340;
+      const cameraY = 220;
+      const horizonY = h * 0.42;
+
+      const scale = fov / (fov + z);
+      const screenX = w / 2 + x * scale;
+      const screenY = horizonY + (cameraY - y) * scale;
+      return { x: screenX, y: screenY, scale };
+    }
+
+    /* =====================================================================
+       5. INPUT HANDLING (Touch, Keyboard, Swipes)
+       ===================================================================== */
+    function moveLeft() {
+      if (!gameActive) return;
+      if (targetLane > -1) {
+        targetLane--;
+        playWhooshSound();
+      }
+    }
+
+    function moveRight() {
+      if (!gameActive) return;
+      if (targetLane < 1) {
+        targetLane++;
+        playWhooshSound();
+      }
+    }
+
+    function jump() {
+      if (!gameActive) return;
+      if (playerY <= 5 && !isSliding) {
+        playerVy = shoesTimer > 0 ? JUMP_VELOCITY * 1.35 : JUMP_VELOCITY;
+        playJumpSound();
+      }
+    }
+
+    function slide() {
+      if (!gameActive) return;
+      if (playerY > 10) {
+        // Fast dive if in mid-air
+        playerVy = -1100;
+      }
+      isSliding = true;
+      slideTimer = 0.65;
+      playSlideSound();
+    }
+
+    function handleTouchAction(action, e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      if (action === 'left') moveLeft();
+      else if (action === 'right') moveRight();
+      else if (action === 'jump') jump();
+      else if (action === 'slide') slide();
+    }
+
+    // Keyboard controls
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') moveLeft();
+      else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') moveRight();
+      else if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W' || e.key === ' ') {
+        e.preventDefault();
+        jump();
+      }
+      else if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') {
+        e.preventDefault();
+        slide();
+      }
+    });
+
+    // Touchscreen Swipe Gestures
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches[0]) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+      }
+    }, { passive: true });
+
+    canvas.addEventListener('touchend', (e) => {
+      if (!e.changedTouches[0]) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+
+      if (dt < 450) {
+        const absX = Math.abs(dx);
+        const absY = Math.abs(dy);
+        const threshold = 28;
+
+        if (absX > threshold && absX > absY) {
+          if (dx < 0) moveLeft();
+          else moveRight();
+        } else if (absY > threshold && absY > absX) {
+          if (dy < 0) jump();
+          else slide();
+        }
+      }
+    }, { passive: true });
+
+    /* =====================================================================
+       6. TRACK ITEMS & WORLD GENERATOR
+       ===================================================================== */
+    function spawnRow() {
+      const zSpawn = 1600;
+      const typeRoll = Math.random();
+
+      // Pick lane patterns
+      const freeLane = Math.floor(Math.random() * 3) - 1; // -1, 0, or 1
+
+      // 1. Spawning Power-ups occasionally
+      if (Math.random() < 0.08) {
+        const pTypes = ['magnet', 'jetpack', 'shoes', 'shield'];
+        const pType = pTypes[Math.floor(Math.random() * pTypes.length)];
+        trackItems.push({
+          type: 'powerup',
+          subType: pType,
+          lane: freeLane,
+          z: zSpawn,
+          y: 35
+        });
+        return;
+      }
+
+      // 2. Obstacles + Chocolates / Gems Pattern
+      if (typeRoll < 0.40) {
+        // Low Candy Hurdle (requires Jump!)
+        const hurdleLane = Math.floor(Math.random() * 3) - 1;
+        trackItems.push({
+          type: 'hurdle',
+          lane: hurdleLane,
+          z: zSpawn,
+          y: 0,
+          w: 80,
+          h: 40
+        });
+
+        // Put Chocolates in an arc over the hurdle!
+        for (let i = 0; i < 4; i++) {
+          trackItems.push({
+            type: 'choco',
+            lane: hurdleLane,
+            z: zSpawn - 60 + i * 45,
+            y: 40 + Math.sin((i / 3) * Math.PI) * 75
+          });
+        }
+      } else if (typeRoll < 0.70) {
+        // High Candy Arch / Donut Gate (requires Slide!)
+        const archLane = Math.floor(Math.random() * 3) - 1;
+        trackItems.push({
+          type: 'arch',
+          lane: archLane,
+          z: zSpawn,
+          y: 45,
+          w: 90,
+          h: 80
+        });
+
+        // Put Gems floating low on ground under arch!
+        for (let i = 0; i < 3; i++) {
+          trackItems.push({
+            type: 'gem',
+            gemColor: ['#EF4444', '#3B82F6', '#10B981', '#EC4899'][i % 4],
+            lane: archLane,
+            z: zSpawn - 30 + i * 40,
+            y: 15
+          });
+        }
+      } else {
+        // Gummy Wagon / Blocked lane - switch to other lanes!
+        const blockLane = Math.floor(Math.random() * 3) - 1;
+        trackItems.push({
+          type: 'train',
+          lane: blockLane,
+          z: zSpawn,
+          y: 0,
+          w: 85,
+          h: 75
+        });
+
+        // Put delicious chocolate trail in the open lanes
+        const openLane = (blockLane === 0) ? (Math.random() < 0.5 ? -1 : 1) : 0;
+        for (let i = 0; i < 4; i++) {
+          trackItems.push({
+            type: (i % 2 === 0) ? 'choco' : 'gem',
+            gemColor: '#F59E0B',
+            lane: openLane,
+            z: zSpawn - 40 + i * 45,
+            y: 25
+          });
+        }
+      }
+    }
+
+    /* =====================================================================
+       7. MAIN GAME LOOP (Update & 60 FPS Render)
+       ===================================================================== */
+    function startGame() {
+      playPopSound();
+      document.getElementById('game-dialog').style.display = 'none';
+
+      gameActive = true;
+      distanceRun = 0;
+      runChocos = 0;
+      runGems = 0;
+      speed = 460;
+      targetLane = 0;
+      playerX = 0;
+      playerY = 0;
+      playerVy = 0;
+      isSliding = false;
+      slideTimer = 0;
+
+      magnetTimer = 0;
+      jetpackTimer = 0;
+      shoesTimer = 0;
+      shieldActive = false;
+
+      trackItems = [];
+      spawnTimer = 0;
+      lastSpokenMilestone = 0;
+
+      updateHUD();
+      speakToast("Ready, Set... RUN KOOPLY!");
+
+      lastTime = performance.now();
+      if (animFrameId) cancelAnimationFrame(animFrameId);
+      animFrameId = requestAnimationFrame(gameLoop);
+    }
+
+    function gameOver() {
+      gameActive = false;
+      playStumbleSound();
+      saveStats(runChocos, runGems);
+
+      setTimeout(() => {
+        document.getElementById('recap-choco').textContent = runChocos;
+        document.getElementById('recap-gem').textContent = runGems;
+        document.getElementById('dialog-stats-grid').style.display = 'grid';
+        document.getElementById('dialog-hero-icon').textContent = '🌟🎉';
+        document.getElementById('dialog-title').textContent = 'High Five Little Hero!';
+        document.getElementById('dialog-subtitle').textContent = `You collected ${runChocos} chocolates and ${runGems} shiny gems!`;
+        document.getElementById('play-btn-text').textContent = 'Run Again! 🏃';
+        document.getElementById('game-dialog').style.display = 'flex';
+        speakToast(`Super job! You ate ${runChocos} chocolates!`);
+      }, 700);
+    }
+
+    function updateHUD() {
+      document.getElementById('hud-choco').textContent = runChocos;
+      document.getElementById('hud-gem').textContent = runGems;
+      document.getElementById('hud-dist').textContent = Math.floor(distanceRun) + 'm';
+
+      // Update Power-up tray
+      const tray = document.getElementById('powerup-tray');
+      let html = '';
+      if (magnetTimer > 0) html += `<div class="powerup-badge" style="color:#D97706;">🧲 Choco-Magnet ${Math.ceil(magnetTimer)}s</div>`;
+      if (jetpackTimer > 0) html += `<div class="powerup-badge" style="color:#3B82F6;">🚀 Rainbow Jetpack ${Math.ceil(jetpackTimer)}s</div>`;
+      if (shoesTimer > 0) html += `<div class="powerup-badge" style="color:#10B981;">👟 Super Bounce ${Math.ceil(shoesTimer)}s</div>`;
+      if (shieldActive) html += `<div class="powerup-badge" style="color:#EC4899;">🫧 Bubble Shield</div>`;
+      tray.innerHTML = html;
+    }
+
+    function gameLoop(now) {
+      const dt = Math.min((now - lastTime) / 1000, 0.1);
+      lastTime = now;
+
+      if (gameActive) {
+        updateGame(dt);
+      }
+
+      renderGame();
+
+      if (gameActive || playerY > 0 || animFrameId) {
+        animFrameId = requestAnimationFrame(gameLoop);
+      }
+    }
+
+    function updateGame(dt) {
+      distanceRun += (speed * dt) * 0.08;
+      speed = Math.min(780, 460 + distanceRun * 0.6); // Gentle gradual speedup
+
+      // Smooth lane movement
+      const targetX = targetLane * LANE_WIDTH;
+      playerX += (targetX - playerX) * 12 * dt;
+
+      // Jumping & Gravity
+      if (jetpackTimer > 0) {
+        // High floating jetpack mode
+        playerY += (140 - playerY) * 6 * dt;
+        playerVy = 0;
+      } else {
+        playerY += playerVy * dt;
+        if (playerY > 0) {
+          playerVy -= GRAVITY * dt;
+        } else {
+          playerY = 0;
+          playerVy = 0;
+        }
+      }
+
+      // Sliding / Ducking timer
+      if (isSliding) {
+        slideTimer -= dt;
+        if (slideTimer <= 0) isSliding = false;
+      }
+
+      // Power-up countdowns
+      if (magnetTimer > 0) magnetTimer -= dt;
+      if (jetpackTimer > 0) jetpackTimer -= dt;
+      if (shoesTimer > 0) shoesTimer -= dt;
+
+      // Ground texture scroll
+      groundOffset = (groundOffset + speed * dt) % 120;
+
+      // Scenery loop
+      sceneryItems.forEach(s => {
+        s.z -= speed * dt;
+        if (s.z < -100) s.z += 1800;
+      });
+
+      // Spawning obstacles & collectibles
+      spawnTimer -= dt;
+      if (spawnTimer <= 0) {
+        spawnRow();
+        spawnTimer = Math.max(1.1, 2.2 - (speed / 900));
+      }
+
+      // Voice milestones for 4yo encouragement
+      if (runChocos >= lastSpokenMilestone + 5) {
+        lastSpokenMilestone = Math.floor(runChocos / 5) * 5;
+        speakToast(`${lastSpokenMilestone} Chocolates! Yummy!`);
+      }
+
+      // Update Track Items
+      for (let i = trackItems.length - 1; i >= 0; i--) {
+        const item = trackItems[i];
+        item.z -= speed * dt;
+
+        const itemX = item.lane * LANE_WIDTH;
+
+        // Magnet attraction!
+        if (magnetTimer > 0 && (item.type === 'choco' || item.type === 'gem')) {
+          const dx = playerX - itemX;
+          const dy = playerY - item.y;
+          const dist = Math.hypot(dx, dy, item.z);
+          if (dist < 750) {
+            item.lane += (targetLane - item.lane) * 8 * dt;
+            item.y += (playerY - item.y) * 8 * dt;
+            if (item.z > 40) item.z -= speed * 0.8 * dt;
+          }
+        }
+
+        // Collision Check (when item is near Kooply at z around 0 to 45)
+        if (item.z > -25 && item.z < 45) {
+          const laneDiff = Math.abs(playerX - itemX);
+
+          // 1. COLLECTIBLE: CHOCOLATE 🍫
+          if (item.type === 'choco' && laneDiff < 48 && Math.abs(playerY - item.y) < 55) {
+            runChocos++;
+            playChocoSound();
+            const pill = document.getElementById('pill-choco');
+            pill.classList.add('pill-bounce');
+            setTimeout(() => pill.classList.remove('pill-bounce'), 150);
+            updateHUD();
+            trackItems.splice(i, 1);
+            continue;
+          }
+
+          // 2. COLLECTIBLE: GEM 💎
+          if (item.type === 'gem' && laneDiff < 48 && Math.abs(playerY - item.y) < 55) {
+            runGems++;
+            playGemSound();
+            const pill = document.getElementById('pill-gem');
+            pill.classList.add('pill-bounce');
+            setTimeout(() => pill.classList.remove('pill-bounce'), 150);
+            updateHUD();
+            trackItems.splice(i, 1);
+            continue;
+          }
+
+          // 3. POWER-UP 🧲🚀👟🫧
+          if (item.type === 'powerup' && laneDiff < 48 && Math.abs(playerY - item.y) < 65) {
+            playPowerupSound();
+            if (item.subType === 'magnet') {
+              magnetTimer = 10;
+              speakToast("🧲 Choco-Magnet Active!");
+            } else if (item.subType === 'jetpack') {
+              jetpackTimer = 8;
+              speakToast("🚀 Rainbow Jetpack! Wheee!");
+            } else if (item.subType === 'shoes') {
+              shoesTimer = 12;
+              speakToast("👟 Super Bounce Shoes!");
+            } else if (item.subType === 'shield') {
+              shieldActive = true;
+              speakToast("🫧 Bubble Shield On!");
+            }
+            updateHUD();
+            trackItems.splice(i, 1);
+            continue;
+          }
+
+          // 4. OBSTACLES: HURDLE, ARCH, TRAIN
+          if (jetpackTimer <= 0) { // Jetpack flies safely over all obstacles!
+            let hasHit = false;
+
+            if (item.type === 'hurdle' && laneDiff < 42) {
+              // Hurdle: Safe if jumping high enough!
+              if (playerY < 32) hasHit = true;
+            } else if (item.type === 'arch' && laneDiff < 42) {
+              // Arch: Safe if sliding / ducking!
+              if (!isSliding) hasHit = true;
+            } else if (item.type === 'train' && laneDiff < 44) {
+              // Train: Full block unless jumped on roof or in other lane
+              if (playerY < 68) hasHit = true;
+            }
+
+            if (hasHit) {
+              if (shieldActive) {
+                // Shield pops with gentle protection
+                shieldActive = false;
+                playPopSound();
+                speakToast("🫧 Bubble Protected You!");
+                updateHUD();
+                trackItems.splice(i, 1);
+                continue;
+              } else {
+                gameOver();
+                return;
+              }
+            }
+          }
+        }
+
+        // Remove passed items
+        if (item.z < -80) {
+          trackItems.splice(i, 1);
+        }
+      }
+
+      updateHUD();
+    }
+
+    /* =====================================================================
+       8. 2.5D CANVAS RENDERING
+       ===================================================================== */
+    function renderGame() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      ctx.clearRect(0, 0, w, h);
+
+      // 1. SKY & CANDY CLOUDS
+      const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.45);
+      skyGrad.addColorStop(0, '#38BDF8');
+      skyGrad.addColorStop(1, '#BAE6FD');
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(0, 0, w, h * 0.45);
+
+      // Fluffy clouds
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      drawCloud(w * 0.2, h * 0.15, 60);
+      drawCloud(w * 0.75, h * 0.22, 85);
+      drawCloud(w * 0.5, h * 0.08, 50);
+
+      // Horizon Candy Hills
+      ctx.fillStyle = '#F472B6';
+      ctx.beginPath();
+      ctx.arc(w * 0.25, h * 0.43, 140, Math.PI, 0);
+      ctx.fill();
+      ctx.fillStyle = '#A78BFA';
+      ctx.beginPath();
+      ctx.arc(w * 0.72, h * 0.43, 160, Math.PI, 0);
+      ctx.fill();
+
+      // 2. GROUND (Grass / Frosting)
+      const groundGrad = ctx.createLinearGradient(0, h * 0.42, 0, h);
+      groundGrad.addColorStop(0, '#86EFAC');
+      groundGrad.addColorStop(1, '#4ADE80');
+      ctx.fillStyle = groundGrad;
+      ctx.fillRect(0, h * 0.42, w, h * 0.58);
+
+      // 3. 3-LANE CANDY RAILROAD TRACKS (Perspective Subway Surfers tracks)
+      renderTracks(w, h);
+
+      // 4. SCENERY (Trees, Candy Canes)
+      renderScenery();
+
+      // 5. SORT & RENDER TRACK ITEMS (Back to Front)
+      const sorted = [...trackItems].sort((a, b) => b.z - a.z);
+      sorted.forEach(item => {
+        renderTrackItem(item);
+      });
+
+      // 6. RENDER KOOPLY (The Hero Mascot)
+      renderKooply();
+    }
+
+    function drawCloud(cx, cy, r) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.arc(cx + r * 0.6, cy - r * 0.2, r * 0.75, 0, Math.PI * 2);
+      ctx.arc(cx - r * 0.6, cy - r * 0.1, r * 0.6, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function renderTracks(w, h) {
+      const pFarLeft = project3D(-LANE_WIDTH * 1.65, 0, 1500);
+      const pFarRight = project3D(LANE_WIDTH * 1.65, 0, 1500);
+      const pNearLeft = project3D(-LANE_WIDTH * 1.65, 0, 0);
+      const pNearRight = project3D(LANE_WIDTH * 1.65, 0, 0);
+
+      // Chocolate Bed under tracks
+      ctx.fillStyle = '#653818';
+      ctx.beginPath();
+      ctx.moveTo(pFarLeft.x, pFarLeft.y);
+      ctx.lineTo(pFarRight.x, pFarRight.y);
+      ctx.lineTo(pNearRight.x, pNearRight.y);
+      ctx.lineTo(pNearLeft.x, pNearLeft.y);
+      ctx.closePath();
+      ctx.fill();
+
+      // 4 Railroad Rails
+      const railLanes = [-1.5, -0.5, 0.5, 1.5];
+      ctx.strokeStyle = '#D97706';
+      ctx.lineWidth = 4;
+      railLanes.forEach(r => {
+        const p1 = project3D(r * LANE_WIDTH, 0, 1500);
+        const p2 = project3D(r * LANE_WIDTH, 0, 0);
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      });
+
+      // Animated Railroad Ties (moving towards camera)
+      ctx.fillStyle = '#B45309';
+      for (let z = 1500; z >= 0; z -= 65) {
+        const zShifted = (z - groundOffset + 1500) % 1500;
+        const pL = project3D(-LANE_WIDTH * 1.5, 0, zShifted);
+        const pR = project3D(LANE_WIDTH * 1.5, 0, zShifted);
+        const tieHeight = Math.max(2, 6 * pL.scale);
+
+        ctx.fillRect(pL.x, pL.y, pR.x - pL.x, tieHeight);
+      }
+    }
+
+    function renderScenery() {
+      sceneryItems.forEach(s => {
+        const x = s.side * s.distX;
+        const p = project3D(x, 0, s.z);
+        if (p.scale <= 0) return;
+
+        const sz = 60 * p.scale * s.scale;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+
+        if (s.type === 'candy_cane') {
+          // Candy Cane
+          ctx.strokeStyle = '#EF4444';
+          ctx.lineWidth = 10 * p.scale;
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(0, -sz * 1.4);
+          ctx.arc(s.side * sz * 0.4, -sz * 1.4, sz * 0.4, Math.PI, 0, s.side > 0);
+          ctx.stroke();
+        } else if (s.type === 'lollipop') {
+          // Lollipop Tree
+          ctx.fillStyle = '#CBD5E1';
+          ctx.fillRect(-3 * p.scale, -sz * 1.3, 6 * p.scale, sz * 1.3);
+          ctx.fillStyle = s.side > 0 ? '#EC4899' : '#8B5CF6';
+          ctx.beginPath();
+          ctx.arc(0, -sz * 1.3, sz * 0.45, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          // Cupcake
+          ctx.fillStyle = '#FBBF24';
+          ctx.beginPath();
+          ctx.arc(0, -sz * 0.4, sz * 0.45, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+      });
+    }
+
+    function renderTrackItem(item) {
+      const p = project3D(item.lane * LANE_WIDTH, item.y, item.z);
+      if (p.scale <= 0) return;
+
+      const size = 65 * p.scale;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+
+      // Shadow on ground under item
+      const groundProj = project3D(item.lane * LANE_WIDTH, 0, item.z);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+      ctx.beginPath();
+      ctx.ellipse(0, groundProj.y - p.y, size * 0.6, size * 0.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      if (item.type === 'choco') {
+        // CHOCOLATE BAR 🍫
+        ctx.font = `${Math.floor(size * 1.2)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🍫', 0, 0);
+      } else if (item.type === 'gem') {
+        // SHINY GEM 💎
+        ctx.font = `${Math.floor(size * 1.15)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('💎', 0, 0);
+      } else if (item.type === 'powerup') {
+        // POWER-UP (Badge with glow)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#FBBF24';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        ctx.font = `${Math.floor(size * 0.85)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        const icon = item.subType === 'magnet' ? '🧲' : (item.subType === 'jetpack' ? '🚀' : (item.subType === 'shoes' ? '👟' : '🫧'));
+        ctx.fillText(icon, 0, 0);
+      } else if (item.type === 'hurdle') {
+        // HURDLE BARRIER (Must jump!)
+        const hw = item.w * p.scale;
+        const hh = item.h * p.scale;
+
+        // Striped barrier
+        ctx.fillStyle = '#EF4444';
+        ctx.fillRect(-hw / 2, -hh, hw, hh * 0.4);
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(-hw / 4, -hh, hw * 0.2, hh * 0.4);
+        ctx.fillRect(hw / 8, -hh, hw * 0.2, hh * 0.4);
+
+        // Barrier posts
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(-hw / 2, -hh, hw * 0.12, hh);
+        ctx.fillRect(hw / 2 - hw * 0.12, -hh, hw * 0.12, hh);
+      } else if (item.type === 'arch') {
+        // HIGH CANDY ARCH (Must slide / duck!)
+        const aw = item.w * p.scale;
+        const ah = item.h * p.scale;
+
+        ctx.strokeStyle = '#F59E0B';
+        ctx.lineWidth = 14 * p.scale;
+        ctx.beginPath();
+        ctx.arc(0, -ah * 0.8, aw * 0.45, Math.PI, 0);
+        ctx.stroke();
+
+        // Sign text "SLIDE!"
+        ctx.fillStyle = '#D97706';
+        ctx.font = `bold ${Math.max(10, Math.floor(18 * p.scale))}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('⬇️ DUCK!', 0, -ah * 0.85);
+      } else if (item.type === 'train') {
+        // GUMMY WAGON / CHOCO TRAIN (Block lane)
+        const tw = item.w * p.scale;
+        const th = item.h * p.scale;
+
+        // Train body
+        ctx.fillStyle = '#4D96FF';
+        ctx.beginPath();
+        ctx.roundRect(-tw / 2, -th, tw, th, 14 * p.scale);
+        ctx.fill();
+
+        // Train front face
+        ctx.fillStyle = '#FDE047';
+        ctx.beginPath();
+        ctx.arc(0, -th * 0.6, tw * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Train smiling face
+        ctx.fillStyle = '#1E293B';
+        ctx.beginPath();
+        ctx.arc(-tw * 0.1, -th * 0.62, 3 * p.scale, 0, Math.PI * 2);
+        ctx.arc(tw * 0.1, -th * 0.62, 3 * p.scale, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#1E293B';
+        ctx.lineWidth = 2 * p.scale;
+        ctx.beginPath();
+        ctx.arc(0, -th * 0.58, tw * 0.12, 0, Math.PI);
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    /* =====================================================================
+       9. RENDER KOOPLY (Our Cute Bouncy Mascot)
+       ===================================================================== */
+    let runLegPhase = 0;
+
+    function renderKooply() {
+      // Kooply is positioned at z = 20 (just in front of camera)
+      const p = project3D(playerX, playerY, 20);
+      const baseSize = 85 * p.scale;
+
+      runLegPhase += speed * 0.015;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+
+      // 1. Kooply Shadow on track
+      const groundProj = project3D(playerX, 0, 20);
+      const shadowScale = Math.max(0.3, 1 - (playerY / 220));
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+      ctx.beginPath();
+      ctx.ellipse(0, groundProj.y - p.y, baseSize * 0.55 * shadowScale, baseSize * 0.22 * shadowScale, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Rainbow Jetpack Trail / Rocket Flames
+      if (jetpackTimer > 0) {
+        ctx.fillStyle = '#F97316';
+        ctx.beginPath();
+        ctx.moveTo(-18 * p.scale, 0);
+        ctx.lineTo(0, (25 + Math.random() * 15) * p.scale);
+        ctx.lineTo(-30 * p.scale, 0);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(18 * p.scale, 0);
+        ctx.lineTo(0, (25 + Math.random() * 15) * p.scale);
+        ctx.lineTo(30 * p.scale, 0);
+        ctx.fill();
+      }
+
+      // 3. Kooply Body (Squashes when sliding, stretches when jumping!)
+      let scaleX = 1;
+      let scaleY = 1;
+      let offsetY = 0;
+
+      if (isSliding) {
+        scaleX = 1.45;
+        scaleY = 0.5; // Flat pancake slide!
+        offsetY = baseSize * 0.25;
+      } else if (playerY > 10) {
+        scaleX = 0.85;
+        scaleY = 1.25; // High jump stretch!
+      }
+
+      ctx.scale(scaleX, scaleY);
+      ctx.translate(0, offsetY);
+
+      // Running Sneakers / Legs
+      if (!isSliding) {
+        const legSwing = Math.sin(runLegPhase) * (playerY > 10 ? 4 : 18) * p.scale;
+        // Left Sneaker
+        ctx.fillStyle = '#EF4444';
+        ctx.beginPath();
+        ctx.ellipse(-18 * p.scale, -4 + legSwing, 12 * p.scale, 8 * p.scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Right Sneaker
+        ctx.fillStyle = '#EF4444';
+        ctx.beginPath();
+        ctx.ellipse(18 * p.scale, -4 - legSwing, 12 * p.scale, 8 * p.scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Jelly Body
+      const bodyGrad = ctx.createLinearGradient(0, -baseSize, 0, 0);
+      bodyGrad.addColorStop(0, '#10B981'); // Vibrant Emerald Green
+      bodyGrad.addColorStop(1, '#059669');
+      ctx.fillStyle = bodyGrad;
+
+      ctx.beginPath();
+      ctx.ellipse(0, -baseSize * 0.48, baseSize * 0.42, baseSize * 0.46, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Cute Little Ears / Horns
+      ctx.fillStyle = '#F59E0B';
+      ctx.beginPath();
+      ctx.arc(-baseSize * 0.32, -baseSize * 0.82, baseSize * 0.14, 0, Math.PI * 2);
+      ctx.arc(baseSize * 0.32, -baseSize * 0.82, baseSize * 0.14, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Backwards Red Cap
+      ctx.fillStyle = '#EF4444';
+      ctx.beginPath();
+      ctx.ellipse(0, -baseSize * 0.76, baseSize * 0.36, baseSize * 0.18, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Cap visor pointing back
+      ctx.beginPath();
+      ctx.ellipse(0, -baseSize * 0.82, baseSize * 0.28, baseSize * 0.1, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Blue Backpack
+      ctx.fillStyle = '#3B82F6';
+      ctx.beginPath();
+      ctx.roundRect(-baseSize * 0.25, -baseSize * 0.62, baseSize * 0.5, baseSize * 0.38, 8 * p.scale);
+      ctx.fill();
+
+      // Bubble Shield Effect
+      if (shieldActive) {
+        ctx.strokeStyle = 'rgba(236, 72, 153, 0.7)';
+        ctx.lineWidth = 5 * p.scale;
+        ctx.fillStyle = 'rgba(236, 72, 153, 0.18)';
+        ctx.beginPath();
+        ctx.arc(0, -baseSize * 0.48, baseSize * 0.65, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      ctx.restore();
+    }
+
+    // Auto-init on first load
+    window.addEventListener('load', () => {
+      document.body.addEventListener('click', () => {
+        initAudio();
+      }, { once: true });
+    });
+  </script>
+</body>
+</html>

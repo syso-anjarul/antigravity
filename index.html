@@ -250,6 +250,9 @@
     .game-card.color-game { border-color: #00C49F; }
     .game-card.color-game .card-icon-wrap { background: #E6FAF6; color: #00A884; }
 
+    .game-card.runner-game { border-color: #D97706; background: linear-gradient(135deg, #FFFFFF 0%, #FFFBEB 100%); }
+    .game-card.runner-game .card-icon-wrap { background: #FEF3C7; color: #B45309; }
+
     .game-card.dress-game { border-color: #FF923C; }
     .game-card.dress-game .card-icon-wrap { background: #FFE8D6; color: #D9480F; }
 
@@ -1251,7 +1254,17 @@
           </div>
         </div>
 
-        <!-- Bonus 7: Dress-Up Monster (Reward / Creative Room) -->
+        <!-- Game 7: Kooply Run (Subway Surfers Candy Runner) -->
+        <div class="game-card runner-game" onclick="window.location.href='kooply.html'">
+          <div class="card-icon-wrap">🍫</div>
+          <div class="card-info">
+            <span class="card-title">Kooply Run! 🏃</span>
+            <span class="card-desc">Subway Candy: Grab Chocolates & Gems!</span>
+            <span class="card-badge" style="background:#FEF3C7; color:#B45309;">3D Candy Runner</span>
+          </div>
+        </div>
+
+        <!-- Bonus 8: Dress-Up Monster (Reward / Creative Room) -->
         <div class="game-card dress-game" onclick="startDressGame()">
           <div class="card-icon-wrap">🎩</div>
           <div class="card-info">
@@ -1349,6 +1362,14 @@
             <div style="font-size: 0.78rem; color: #94A3B8;">Magic Color & Paint Studio</div>
           </div>
           <span style="color: #00A884; font-size: 1.1rem; font-weight: 900;" id="stat-color">0 played</span>
+        </div>
+
+        <div class="analytic-item">
+          <div>
+            <div>🍫 Reflexes, Lane Navigation & Counting</div>
+            <div style="font-size: 0.78rem; color: #94A3B8;">Kooply Run (Chocolates & Gems)</div>
+          </div>
+          <span style="color: #D97706; font-size: 1.1rem; font-weight: 900;" id="stat-runner">0 🍫 / 0 💎</span>
         </div>
       </div>
 
@@ -3234,6 +3255,9 @@
       document.getElementById('stat-counting').textContent = `${stats.counting} played`;
       document.getElementById('stat-size').textContent = `${stats.size} played`;
       document.getElementById('stat-color').textContent = `${stats.color} played`;
+      const chocos = parseInt(localStorage.getItem('kooply_chocos') || '0');
+      const gems = parseInt(localStorage.getItem('kooply_gems') || '0');
+      document.getElementById('stat-runner').textContent = `${chocos} 🍫 / ${gems} 💎`;
 
       document.getElementById('parent-modal').style.display = 'flex';
     }
