@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏃 Kooply Run - Candy Subway Runner for Kids</title>
+  <title>⚡ Kooply: Spark Boy Run - Charming Electric Subway Runner</title>
   <style>
     :root {
       --primary: #FF5E7E;
@@ -448,10 +448,10 @@
   <!-- START & GAME RECAP MODAL DIALOG -->
   <div class="game-dialog-overlay" id="game-dialog">
     <div class="dialog-card">
-      <div class="dialog-hero-icon" id="dialog-hero-icon">🍫🏃</div>
-      <h1 class="dialog-title" id="dialog-title">Kooply Run!</h1>
+      <div class="dialog-hero-icon" id="dialog-hero-icon">⚡👦🍫</div>
+      <h1 class="dialog-title" id="dialog-title">Kooply: Spark Boy Run!</h1>
       <p class="dialog-subtitle" id="dialog-subtitle">
-        Subway Candy Runner: Dash, Jump & Grab Chocolates & Gems!
+        Charming Spark Boy: Dash, Jump & Grab Chocolates & Gems!
       </p>
 
       <div class="stats-summary-grid" id="dialog-stats-grid" style="display: none;">
@@ -993,7 +993,7 @@
       lastSpokenMilestone = 0;
 
       updateHUD();
-      speakToast("Ready, Set... RUN KOOPLY!");
+      speakToast("Ready, Set... GO SPARK BOY!");
 
       lastTime = performance.now();
       if (animFrameId) cancelAnimationFrame(animFrameId);
@@ -1081,6 +1081,12 @@
       if (magnetTimer > 0) magnetTimer -= dt;
       if (jetpackTimer > 0) jetpackTimer -= dt;
       if (shoesTimer > 0) shoesTimer -= dt;
+
+      
+      // Emit sneaker sparks!
+      if (playerY <= 5) {
+        addSneakerSpark(playerX, 0, 20, isSliding ? 4 : 1, isSliding);
+      }
 
       // Ground texture scroll
       groundOffset = (groundOffset + speed * dt) % 120;
@@ -1463,118 +1469,312 @@
     }
 
     /* =====================================================================
-       9. RENDER KOOPLY (Our Cute Bouncy Mascot)
+       9. RENDER CHARMING SPARK BOY (Handsome, Electric Parkour Hero!)
        ===================================================================== */
-    let runLegPhase = 0;
-
     function renderKooply() {
-      // Kooply is positioned at z = 20 (just in front of camera)
+      // Spark Boy position at z = 20
       const p = project3D(playerX, playerY, 20);
-      const baseSize = 85 * p.scale;
+      const s = p.scale;
+      const baseHeight = 110 * s;
+      const baseWidth = 52 * s;
 
-      runLegPhase += speed * 0.015;
+      runLegPhase += speed * 0.018;
 
       ctx.save();
       ctx.translate(p.x, p.y);
 
-      // 1. Kooply Shadow on track
+      // 1. Soft Athletic Drop Shadow on track
       const groundProj = project3D(playerX, 0, 20);
-      const shadowScale = Math.max(0.3, 1 - (playerY / 220));
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+      const shadowScale = Math.max(0.3, 1 - (playerY / 240));
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.28)';
       ctx.beginPath();
-      ctx.ellipse(0, groundProj.y - p.y, baseSize * 0.55 * shadowScale, baseSize * 0.22 * shadowScale, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, groundProj.y - p.y, baseWidth * 0.7 * shadowScale, baseWidth * 0.24 * shadowScale, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Rainbow Jetpack Trail / Rocket Flames
+      // 2. High-Tech Aero Jetpack Thrusters (if active)
       if (jetpackTimer > 0) {
-        ctx.fillStyle = '#F97316';
+        // Dual shoulder turbines
+        ctx.fillStyle = '#1E293B';
+        ctx.fillRect(-22 * s, -baseHeight * 0.72, 10 * s, 26 * s);
+        ctx.fillRect(12 * s, -baseHeight * 0.72, 10 * s, 26 * s);
+        
+        // Neon cyan & orange plasma flames
+        ctx.fillStyle = '#38BDF8';
         ctx.beginPath();
-        ctx.moveTo(-18 * p.scale, 0);
-        ctx.lineTo(0, (25 + Math.random() * 15) * p.scale);
-        ctx.lineTo(-30 * p.scale, 0);
+        ctx.moveTo(-22 * s, -baseHeight * 0.48);
+        ctx.lineTo(-17 * s, -baseHeight * 0.48 + (30 + Math.random() * 20) * s);
+        ctx.lineTo(-12 * s, -baseHeight * 0.48);
         ctx.fill();
 
         ctx.beginPath();
-        ctx.moveTo(18 * p.scale, 0);
-        ctx.lineTo(0, (25 + Math.random() * 15) * p.scale);
-        ctx.lineTo(30 * p.scale, 0);
+        ctx.moveTo(12 * s, -baseHeight * 0.48);
+        ctx.lineTo(17 * s, -baseHeight * 0.48 + (30 + Math.random() * 20) * s);
+        ctx.lineTo(22 * s, -baseHeight * 0.48);
+        ctx.fill();
+
+        // Core gold fire
+        ctx.fillStyle = '#FBBF24';
+        ctx.beginPath();
+        ctx.moveTo(-20 * s, -baseHeight * 0.48);
+        ctx.lineTo(-17 * s, -baseHeight * 0.48 + (18 + Math.random() * 12) * s);
+        ctx.lineTo(-14 * s, -baseHeight * 0.48);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(14 * s, -baseHeight * 0.48);
+        ctx.lineTo(17 * s, -baseHeight * 0.48 + (18 + Math.random() * 12) * s);
+        ctx.lineTo(20 * s, -baseHeight * 0.48);
         ctx.fill();
       }
 
-      // 3. Kooply Body (Squashes when sliding, stretches when jumping!)
-      let scaleX = 1;
-      let scaleY = 1;
-      let offsetY = 0;
-
+      // Athletic Body Transformation (Slide vs Jump vs Run)
       if (isSliding) {
-        scaleX = 1.45;
-        scaleY = 0.5; // Flat pancake slide!
-        offsetY = baseSize * 0.25;
-      } else if (playerY > 10) {
-        scaleX = 0.85;
-        scaleY = 1.25; // High jump stretch!
+        // COOL BASEBALL / PARKOUR SLIDE
+        ctx.translate(0, -baseHeight * 0.28);
+        
+        // Extended sliding leg & knee
+        ctx.fillStyle = '#1E293B'; // Dark Joggers
+        ctx.beginPath();
+        ctx.roundRect(-24 * s, -8 * s, 48 * s, 18 * s, 6 * s);
+        ctx.fill();
+
+        // Glowing Slide High-Tops
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(18 * s, -6 * s, 16 * s, 14 * s);
+        ctx.fillStyle = '#06B6D4'; // Glowing electric sole
+        ctx.fillRect(18 * s, 6 * s, 18 * s, 5 * s);
+
+        // Angled Torso in Jacket
+        ctx.fillStyle = '#1D4ED8';
+        ctx.beginPath();
+        ctx.roundRect(-22 * s, -38 * s, 36 * s, 32 * s, 8 * s);
+        ctx.fill();
+
+        // Golden Lightning Bolt on back ⚡
+        ctx.fillStyle = '#FBBF24';
+        ctx.font = `bold ${Math.floor(16 * s)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.fillText('⚡', -4 * s, -18 * s);
+
+        // Head & Stylish Hair tilted low
+        ctx.fillStyle = '#FBBF24'; // Golden-brown stylish hair
+        ctx.beginPath();
+        ctx.arc(-2 * s, -48 * s, 14 * s, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#78350F';
+        ctx.beginPath();
+        ctx.arc(-2 * s, -48 * s, 12 * s, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // RUNNING OR JUMPING ATHLETIC BOY
+        const isJumping = playerY > 8;
+        const legCycle = isJumping ? 0.4 : Math.sin(runLegPhase);
+        const armCycle = isJumping ? 0.3 : Math.cos(runLegPhase);
+
+        // --- 1. ATHLETIC LEGS & SNEAKERS ---
+        const leftLegY = isJumping ? -18 * s : (legCycle * 18 * s);
+        const rightLegY = isJumping ? -14 * s : (-legCycle * 18 * s);
+
+        // Left Leg (Joggers)
+        ctx.fillStyle = '#1E293B';
+        ctx.beginPath();
+        ctx.roundRect(-18 * s, -baseHeight * 0.46, 12 * s, baseHeight * 0.42 + leftLegY, 5 * s);
+        ctx.fill();
+        // Cyan racing stripe
+        ctx.fillStyle = '#06B6D4';
+        ctx.fillRect(-18 * s, -baseHeight * 0.44, 2.5 * s, baseHeight * 0.38 + leftLegY);
+
+        // Left High-Top Sneaker
+        const leftFootY = -baseHeight * 0.06 + leftLegY;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.roundRect(-20 * s, leftFootY - 14 * s, 15 * s, 14 * s, 4 * s);
+        ctx.fill();
+        // Red shoe accent
+        ctx.fillStyle = '#EF4444';
+        ctx.fillRect(-20 * s, leftFootY - 10 * s, 15 * s, 4 * s);
+        // Glowing Neon Cyan Sole
+        ctx.fillStyle = '#00F0FF';
+        ctx.shadowColor = '#00F0FF';
+        ctx.shadowBlur = 8 * s;
+        ctx.fillRect(-21 * s, leftFootY - 2 * s, 17 * s, 4 * s);
+        ctx.shadowBlur = 0; // reset
+
+        // Right Leg (Joggers)
+        ctx.fillStyle = '#1E293B';
+        ctx.beginPath();
+        ctx.roundRect(6 * s, -baseHeight * 0.46, 12 * s, baseHeight * 0.42 + rightLegY, 5 * s);
+        ctx.fill();
+        // Cyan racing stripe
+        ctx.fillStyle = '#06B6D4';
+        ctx.fillRect(15.5 * s, -baseHeight * 0.44, 2.5 * s, baseHeight * 0.38 + rightLegY);
+
+        // Right High-Top Sneaker
+        const rightFootY = -baseHeight * 0.06 + rightLegY;
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.roundRect(4 * s, rightFootY - 14 * s, 15 * s, 14 * s, 4 * s);
+        ctx.fill();
+        // Red shoe accent
+        ctx.fillStyle = '#EF4444';
+        ctx.fillRect(4 * s, rightFootY - 10 * s, 15 * s, 4 * s);
+        // Glowing Neon Cyan Sole
+        ctx.fillStyle = '#00F0FF';
+        ctx.shadowColor = '#00F0FF';
+        ctx.shadowBlur = 8 * s;
+        ctx.fillRect(3 * s, rightFootY - 2 * s, 17 * s, 4 * s);
+        ctx.shadowBlur = 0; // reset
+
+        // --- 2. ATHLETIC TORSO & ELECTRIC JACKET ---
+        const torsoBob = isJumping ? -6 * s : Math.abs(Math.sin(runLegPhase * 2)) * 3 * s;
+        ctx.save();
+        ctx.translate(0, torsoBob);
+
+        // Jacket Body (Electric Cobalt Blue Gradient)
+        const jacketGrad = ctx.createLinearGradient(0, -baseHeight * 0.82, 0, -baseHeight * 0.42);
+        jacketGrad.addColorStop(0, '#1D4ED8'); // Deep Royal Blue
+        jacketGrad.addColorStop(1, '#0284C7'); // Electric Cyan-Blue
+        ctx.fillStyle = jacketGrad;
+        ctx.beginPath();
+        ctx.roundRect(-baseWidth * 0.42, -baseHeight * 0.82, baseWidth * 0.84, baseHeight * 0.40, [8 * s, 8 * s, 4 * s, 4 * s]);
+        ctx.fill();
+
+        // White Athletic Shoulder Stripes
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(-baseWidth * 0.40, -baseHeight * 0.82, 6 * s, 26 * s);
+        ctx.fillRect(baseWidth * 0.40 - 6 * s, -baseHeight * 0.82, 6 * s, 26 * s);
+
+        // Golden Glowing Lightning Emblem on Back ⚡
+        ctx.fillStyle = '#FDE047';
+        ctx.shadowColor = '#FBBF24';
+        ctx.shadowBlur = 10 * s;
+        ctx.beginPath();
+        // Sharp cool lightning polygon
+        ctx.moveTo(1 * s, -baseHeight * 0.74);
+        ctx.lineTo(-7 * s, -baseHeight * 0.61);
+        ctx.lineTo(-1 * s, -baseHeight * 0.61);
+        ctx.lineTo(-4 * s, -baseHeight * 0.48);
+        ctx.lineTo(7 * s, -baseHeight * 0.63);
+        ctx.lineTo(1 * s, -baseHeight * 0.63);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // White inner t-shirt collar at neck
+        ctx.fillStyle = '#F8FAFC';
+        ctx.beginPath();
+        ctx.ellipse(0, -baseHeight * 0.82, 9 * s, 4 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // --- 3. SWINGING ARMS WITH ATHLETIC GLOVES ---
+        // Left Arm
+        ctx.fillStyle = '#1D4ED8';
+        ctx.beginPath();
+        ctx.roundRect(-baseWidth * 0.58, -baseHeight * 0.80 + armCycle * 14 * s, 9 * s, 28 * s, 4 * s);
+        ctx.fill();
+        // Left Fingerless Glove
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(-baseWidth * 0.58, -baseHeight * 0.54 + armCycle * 14 * s, 9 * s, 9 * s);
+
+        // Right Arm
+        ctx.fillStyle = '#1D4ED8';
+        ctx.beginPath();
+        ctx.roundRect(baseWidth * 0.42, -baseHeight * 0.80 - armCycle * 14 * s, 9 * s, 28 * s, 4 * s);
+        ctx.fill();
+        // Right Fingerless Glove
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(baseWidth * 0.42, -baseHeight * 0.54 - armCycle * 14 * s, 9 * s, 9 * s);
+
+        // --- 4. CHARMING HEAD & STYLISH HAIR ---
+        // Neck (Warm peachy skin)
+        ctx.fillStyle = '#F6C199';
+        ctx.fillRect(-6 * s, -baseHeight * 0.89, 12 * s, 10 * s);
+
+        // Head Base
+        ctx.beginPath();
+        ctx.arc(0, -baseHeight * 0.94, 15 * s, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Cool Wireless Sports Headphones (Neon Cyan Band)
+        ctx.strokeStyle = '#06B6D4';
+        ctx.lineWidth = 4 * s;
+        ctx.beginPath();
+        ctx.arc(0, -baseHeight * 0.94, 17 * s, Math.PI * 0.85, Math.PI * 0.15);
+        ctx.stroke();
+        // Earcups with glowing neon LED
+        ctx.fillStyle = '#1E293B';
+        ctx.fillRect(-18 * s, -baseHeight * 0.96, 5 * s, 10 * s);
+        ctx.fillRect(13 * s, -baseHeight * 0.96, 5 * s, 10 * s);
+        ctx.fillStyle = '#00F0FF';
+        ctx.fillRect(-17 * s, -baseHeight * 0.93, 2 * s, 4 * s);
+        ctx.fillRect(14 * s, -baseHeight * 0.93, 2 * s, 4 * s);
+
+        // CHARMING WINDSWEPT SPIKY HAIR (Rich Amber / Brown with Golden & Electric Highlights)
+        // Hair Base
+        ctx.fillStyle = '#451A03'; // Rich Deep Chestnut Brown
+        ctx.beginPath();
+        ctx.arc(0, -baseHeight * 0.96, 17 * s, Math.PI * 0.8, Math.PI * 2.2);
+        ctx.fill();
+
+        // Stylish Spiky Tufts flowing back in the wind!
+        ctx.fillStyle = '#78350F';
+        // Left Spikes
+        ctx.beginPath();
+        ctx.moveTo(-16 * s, -baseHeight * 0.96);
+        ctx.lineTo(-24 * s, -baseHeight * 1.04);
+        ctx.lineTo(-10 * s, -baseHeight * 1.02);
+        ctx.fill();
+
+        // Center Top Spikes (Windswept)
+        ctx.beginPath();
+        ctx.moveTo(-8 * s, -baseHeight * 1.06);
+        ctx.lineTo(0, -baseHeight * 1.16);
+        ctx.lineTo(10 * s, -baseHeight * 1.05);
+        ctx.fill();
+
+        // Right Spikes
+        ctx.beginPath();
+        ctx.moveTo(10 * s, -baseHeight * 0.96);
+        ctx.lineTo(24 * s, -baseHeight * 1.04);
+        ctx.lineTo(16 * s, -baseHeight * 1.02);
+        ctx.fill();
+
+        // Charming Golden-Blonde Highlights
+        ctx.fillStyle = '#F59E0B';
+        ctx.beginPath();
+        ctx.moveTo(-5 * s, -baseHeight * 1.04);
+        ctx.lineTo(2 * s, -baseHeight * 1.13);
+        ctx.lineTo(7 * s, -baseHeight * 1.03);
+        ctx.fill();
+
+        // Electric Spark Tip on Hair ⚡
+        ctx.fillStyle = '#38BDF8';
+        ctx.shadowColor = '#38BDF8';
+        ctx.shadowBlur = 6 * s;
+        ctx.beginPath();
+        ctx.arc(2 * s, -baseHeight * 1.13, 3 * s, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.restore(); // restore torso bob
       }
 
-      ctx.scale(scaleX, scaleY);
-      ctx.translate(0, offsetY);
-
-      // Running Sneakers / Legs
-      if (!isSliding) {
-        const legSwing = Math.sin(runLegPhase) * (playerY > 10 ? 4 : 18) * p.scale;
-        // Left Sneaker
-        ctx.fillStyle = '#EF4444';
-        ctx.beginPath();
-        ctx.ellipse(-18 * p.scale, -4 + legSwing, 12 * p.scale, 8 * p.scale, 0, 0, Math.PI * 2);
-        ctx.fill();
-        // Right Sneaker
-        ctx.fillStyle = '#EF4444';
-        ctx.beginPath();
-        ctx.ellipse(18 * p.scale, -4 - legSwing, 12 * p.scale, 8 * p.scale, 0, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      // Jelly Body
-      const bodyGrad = ctx.createLinearGradient(0, -baseSize, 0, 0);
-      bodyGrad.addColorStop(0, '#10B981'); // Vibrant Emerald Green
-      bodyGrad.addColorStop(1, '#059669');
-      ctx.fillStyle = bodyGrad;
-
-      ctx.beginPath();
-      ctx.ellipse(0, -baseSize * 0.48, baseSize * 0.42, baseSize * 0.46, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Cute Little Ears / Horns
-      ctx.fillStyle = '#F59E0B';
-      ctx.beginPath();
-      ctx.arc(-baseSize * 0.32, -baseSize * 0.82, baseSize * 0.14, 0, Math.PI * 2);
-      ctx.arc(baseSize * 0.32, -baseSize * 0.82, baseSize * 0.14, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Backwards Red Cap
-      ctx.fillStyle = '#EF4444';
-      ctx.beginPath();
-      ctx.ellipse(0, -baseSize * 0.76, baseSize * 0.36, baseSize * 0.18, 0, 0, Math.PI * 2);
-      ctx.fill();
-      // Cap visor pointing back
-      ctx.beginPath();
-      ctx.ellipse(0, -baseSize * 0.82, baseSize * 0.28, baseSize * 0.1, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Blue Backpack
-      ctx.fillStyle = '#3B82F6';
-      ctx.beginPath();
-      ctx.roundRect(-baseSize * 0.25, -baseSize * 0.62, baseSize * 0.5, baseSize * 0.38, 8 * p.scale);
-      ctx.fill();
-
-      // Bubble Shield Effect
+      // 5. Bubble Shield Aura (if active)
       if (shieldActive) {
-        ctx.strokeStyle = 'rgba(236, 72, 153, 0.7)';
-        ctx.lineWidth = 5 * p.scale;
-        ctx.fillStyle = 'rgba(236, 72, 153, 0.18)';
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.85)';
+        ctx.lineWidth = 5 * s;
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.16)';
         ctx.beginPath();
-        ctx.arc(0, -baseSize * 0.48, baseSize * 0.65, 0, Math.PI * 2);
+        ctx.arc(0, -baseHeight * 0.52, baseHeight * 0.62, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+
+        // Sparkle points on shield
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(-baseHeight * 0.35, -baseHeight * 0.78, 4 * s, 0, Math.PI * 2);
+        ctx.arc(baseHeight * 0.35, -baseHeight * 0.35, 3 * s, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       ctx.restore();
