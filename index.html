@@ -253,6 +253,104 @@
     .game-card.runner-game { border-color: #D97706; background: linear-gradient(135deg, #FFFFFF 0%, #FFFBEB 100%); }
     .game-card.runner-game .card-icon-wrap { background: #FEF3C7; color: #B45309; }
 
+    /* ── KOOPLY BANNER CARD ── */
+    .kooply-banner-card {
+      grid-column: 1 / -1;
+      position: relative;
+      background: linear-gradient(120deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+      border-radius: 28px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      cursor: pointer;
+      overflow: hidden;
+      border: 4px solid #D97706;
+      box-shadow: 0 0 0 4px rgba(217,119,6,0.25), 0 16px 40px rgba(0,0,0,0.30);
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease;
+      min-height: 140px;
+    }
+    .kooply-banner-card:hover {
+      transform: translateY(-5px) scale(1.015);
+      box-shadow: 0 0 0 6px rgba(217,119,6,0.45), 0 24px 50px rgba(0,0,0,0.35);
+    }
+    .kooply-banner-card:active { transform: scale(0.98); }
+    .kooply-track-lines { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+    .kooply-track-line {
+      position: absolute; bottom: 0; height: 100%; width: 2px;
+      background: linear-gradient(to top, rgba(217,119,6,0.5) 0%, transparent 100%);
+      animation: kooply-track-scroll 1.4s linear infinite;
+    }
+    .kooply-track-line:nth-child(1) { left:33%; animation-delay:0s; }
+    .kooply-track-line:nth-child(2) { left:50%; animation-delay:0.46s; }
+    .kooply-track-line:nth-child(3) { left:67%; animation-delay:0.92s; }
+    @keyframes kooply-track-scroll {
+      0%   { opacity:0; transform:translateY(0); }
+      20%  { opacity:1; }
+      80%  { opacity:1; }
+      100% { opacity:0; transform:translateY(-60px); }
+    }
+    .kooply-float {
+      position: absolute; font-size: 1.6rem; pointer-events: none;
+      animation: kooply-float-bob 2.2s ease-in-out infinite alternate;
+    }
+    .kooply-float.kooply-bolt { font-size:1.3rem; animation-duration:1.6s; }
+    @keyframes kooply-float-bob {
+      from { transform: translateY(0) rotate(-8deg); opacity:0.7; }
+      to   { transform: translateY(-10px) rotate(8deg); opacity:1; }
+    }
+    .kooply-left-panel {
+      display:flex; flex-direction:column; align-items:center;
+      gap:4px; flex-shrink:0; position:relative; z-index:2;
+    }
+    #kooply-mini-canvas {
+      border-radius:16px;
+      background:rgba(255,255,255,0.06);
+      border:2px solid rgba(217,119,6,0.4);
+    }
+    .kooply-runner-label {
+      font-size:0.72rem; font-weight:900; color:#FCD34D;
+      letter-spacing:2px; text-transform:uppercase;
+    }
+    .kooply-right-panel {
+      flex:1; display:flex; flex-direction:column;
+      gap:6px; position:relative; z-index:2;
+    }
+    .kooply-game-title {
+      font-size:1.7rem; font-weight:900; color:#FDE68A;
+      text-shadow: 0 0 18px rgba(251,191,36,0.6); line-height:1.1;
+    }
+    .kooply-game-desc { font-size:0.92rem; font-weight:700; color:#BAE6FD; line-height:1.5; }
+    .kooply-badges-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+    .kooply-badge {
+      font-size:0.75rem; font-weight:800; padding:3px 10px;
+      border-radius:999px; text-transform:uppercase; letter-spacing:0.4px;
+    }
+    .kooply-badge-choco { background:#78350F; color:#FDE68A; }
+    .kooply-badge-gem   { background:#1E3A5F; color:#7DD3FC; }
+    .kooply-badge-new   { background:#14532D; color:#86EFAC; }
+    .kooply-play-btn {
+      position:relative; z-index:2; flex-shrink:0;
+      background:linear-gradient(135deg,#F59E0B,#D97706);
+      color:#1C0A00; font-size:1.1rem; font-weight:900;
+      padding:14px 22px; border:3px solid #FBBF24;
+      border-radius:999px; cursor:pointer;
+      box-shadow:0 6px 20px rgba(251,191,36,0.45);
+      transition:all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      font-family:var(--font-family); white-space:nowrap;
+      animation:kooply-pulse-btn 1.6s ease-in-out infinite alternate;
+    }
+    .kooply-play-btn:hover { transform:scale(1.1); box-shadow:0 10px 28px rgba(251,191,36,0.65); }
+    @keyframes kooply-pulse-btn {
+      from { box-shadow:0 6px 20px rgba(251,191,36,0.45); }
+      to   { box-shadow:0 6px 32px rgba(251,191,36,0.80); }
+    }
+    @media (max-width:500px) {
+      .kooply-banner-card { flex-wrap:wrap; }
+      .kooply-game-title  { font-size:1.3rem; }
+      .kooply-play-btn    { width:100%; text-align:center; }
+    }
+
     .game-card.dress-game { border-color: #FF923C; }
     .game-card.dress-game .card-icon-wrap { background: #FFE8D6; color: #D9480F; }
 
@@ -1254,14 +1352,44 @@
           </div>
         </div>
 
-        <!-- Game 7: Kooply: Spark Boy Run (Charming Electric Subway Runner) -->
-        <div class="game-card runner-game" onclick="window.location.href='kooply.html'">
-          <div class="card-icon-wrap">⚡</div>
-          <div class="card-info">
-            <span class="card-title">Spark Boy Run! 🏃⚡</span>
-            <span class="card-desc">Charming Hero: Dash for Chocolates & Gems!</span>
-            <span class="card-badge" style="background:#FEF3C7; color:#B45309;">Charming 3D Hero</span>
+        <!-- Game 7: Kooply: Spark Boy Run — BIG FEATURED BANNER CARD -->
+        <div class="kooply-banner-card" onclick="window.location.href='kooply.html'" title="Play Kooply: Spark Boy Run!">
+
+          <!-- Animated background track lines -->
+          <div class="kooply-track-lines">
+            <div class="kooply-track-line"></div>
+            <div class="kooply-track-line"></div>
+            <div class="kooply-track-line"></div>
           </div>
+
+          <!-- Floating collectibles -->
+          <span class="kooply-float kooply-choco" style="top:14%;left:8%;animation-delay:0s;">&#x1f36b;</span>
+          <span class="kooply-float kooply-gem"   style="top:18%;left:82%;animation-delay:0.6s;">&#x1f48e;</span>
+          <span class="kooply-float kooply-choco" style="top:62%;left:73%;animation-delay:1.1s;">&#x1f36b;</span>
+          <span class="kooply-float kooply-gem"   style="top:58%;left:18%;animation-delay:1.7s;">&#x1f48e;</span>
+          <span class="kooply-float kooply-bolt"  style="top:10%;left:50%;animation-delay:0.4s;">&#x26a1;</span>
+
+          <!-- Canvas mini-runner icon -->
+          <div class="kooply-left-panel">
+            <canvas id="kooply-mini-canvas" width="110" height="130"></canvas>
+            <div class="kooply-runner-label">SPARK BOY</div>
+          </div>
+
+          <!-- Text info -->
+          <div class="kooply-right-panel">
+            <div class="kooply-game-title">&#x26a1; Kooply Run!</div>
+            <div class="kooply-game-desc">Jump &middot; Slide &middot; Collect<br>Chocolates &amp; Shiny Gems</div>
+            <div class="kooply-badges-row">
+              <span class="kooply-badge kooply-badge-choco">&#x1f36b; Chocolates</span>
+              <span class="kooply-badge kooply-badge-gem">&#x1f48e; Gems</span>
+              <span class="kooply-badge kooply-badge-new">&#x1f3c3; 3D Runner</span>
+            </div>
+          </div>
+
+          <!-- Big PLAY button -->
+          <button class="kooply-play-btn" onclick="event.stopPropagation(); window.location.href='kooply.html'">
+            &#x25b6; PLAY NOW!
+          </button>
         </div>
 
         <!-- Bonus 8: Dress-Up Monster (Reward / Creative Room) -->

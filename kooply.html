@@ -737,6 +737,10 @@
     let trackItems = []; // Collectibles (Chocolates, Gems) & Obstacles & Power-ups
     let spawnTimer = 0;
     let groundOffset = 0; // for road texture motion
+    let runLegPhase = 0; // Animation phase for running leg cycle
+
+    // Sneaker spark particles
+    let sparks = [];
 
     // Visual scenery
     const sceneryItems = [];
@@ -871,7 +875,29 @@
     }, { passive: true });
 
     /* =====================================================================
-       6. TRACK ITEMS & WORLD GENERATOR
+       6. SNEAKER SPARK PARTICLES
+       ===================================================================== */
+    function addSneakerSpark(px, py, pz, count, isSliding) {
+      const proj = project3D(px, py, pz);
+      const s = proj.scale;
+      const colors = ['#00F0FF', '#FBBF24', '#38BDF8', '#F59E0B', '#FFFFFF'];
+      for (let i = 0; i < count; i++) {
+        const life = 0.25 + Math.random() * 0.2;
+        sparks.push({
+          x: proj.x + (Math.random() - 0.5) * 24 * s,
+          y: proj.y + (Math.random() * 4) * s,
+          vx: (Math.random() - 0.5) * 90,
+          vy: -Math.random() * 70 - 10,
+          life: life,
+          maxLife: life,
+          size: (1.5 + Math.random() * 2.5) * s,
+          color: colors[Math.floor(Math.random() * colors.length)]
+        });
+      }
+    }
+
+    /* =====================================================================
+       7. TRACK ITEMS & WORLD GENERATOR
        ===================================================================== */
     function spawnRow() {
       const zSpawn = 1600;
@@ -991,6 +1017,8 @@
       trackItems = [];
       spawnTimer = 0;
       lastSpokenMilestone = 0;
+      runLegPhase = 0;
+      sparks = [];
 
       updateHUD();
       speakToast("Ready, Set... GO SPARK BOY!");
@@ -1086,6 +1114,16 @@
       // Emit sneaker sparks!
       if (playerY <= 5) {
         addSneakerSpark(playerX, 0, 20, isSliding ? 4 : 1, isSliding);
+      }
+
+      // Update spark particles
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const sp = sparks[i];
+        sp.x += sp.vx * dt;
+        sp.y += sp.vy * dt;
+        sp.vy += 300 * dt; // gravity pull
+        sp.life -= dt;
+        if (sp.life <= 0) sparks.splice(i, 1);
       }
 
       // Ground texture scroll
@@ -1271,6 +1309,20 @@
 
       // 6. RENDER KOOPLY (The Hero Mascot)
       renderKooply();
+
+      // 7. RENDER SNEAKER SPARKS
+      sparks.forEach(sp => {
+        const alpha = Math.max(0, sp.life / sp.maxLife);
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = sp.color;
+        ctx.shadowColor = sp.color;
+        ctx.shadowBlur = 4;
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
     }
 
     function drawCloud(cx, cy, r) {
@@ -1360,6 +1412,211 @@
       });
     }
 
+    /* =====================================================================
+       DRAW CHOCOLATE BAR — Full 3D Cabinet Projection
+       ===================================================================== */
+    function drawChocoBar(cx, cy, size) {
+      ctx.save();
+      ctx.translate(cx, cy);
+
+      // 3D box dimensions
+      const w  = size * 1.25;   // front face width
+      const h  = size * 0.82;   // front face height
+      const dx = size * 0.30;   // depth x-offset  (right side)
+      const dy = size * 0.18;   // depth y-offset  (top face, going up-right)
+
+      // Front face corners (centered)
+      const fl = -w / 2, fr = w / 2;
+      const ft = -h / 2, fb = h / 2;
+
+      /* ── 1. RIGHT SIDE (darkest shadow face) ── */
+      const sideGrad = ctx.createLinearGradient(fr, 0, fr + dx, 0);
+      sideGrad.addColorStop(0, '#2C1000');
+      sideGrad.addColorStop(1, '#1A0800');
+      ctx.fillStyle = sideGrad;
+      ctx.beginPath();
+      ctx.moveTo(fr,      ft);
+      ctx.lineTo(fr + dx, ft - dy);
+      ctx.lineTo(fr + dx, fb - dy);
+      ctx.lineTo(fr,      fb);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#0F0500';
+      ctx.lineWidth = size * 0.028;
+      ctx.stroke();
+
+      /* ── 2. TOP FACE (mid-lit, shows chocolate squares) ── */
+      const topGrad = ctx.createLinearGradient(0, ft, dx, ft - dy);
+      topGrad.addColorStop(0, '#9B5523');
+      topGrad.addColorStop(1, '#5C2D00');
+      ctx.fillStyle = topGrad;
+      ctx.beginPath();
+      ctx.moveTo(fl,      ft);
+      ctx.lineTo(fr,      ft);
+      ctx.lineTo(fr + dx, ft - dy);
+      ctx.lineTo(fl + dx, ft - dy);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#2C1000';
+      ctx.lineWidth = size * 0.028;
+      ctx.stroke();
+
+      // Top-face segment grooves (3 columns in perspective)
+      const topCols = 3;
+      const topSegW = w / topCols;
+      ctx.strokeStyle = 'rgba(0,0,0,0.55)';
+      ctx.lineWidth = size * 0.028;
+      for (let c = 1; c < topCols; c++) {
+        const xF = fl + c * topSegW;
+        const xB = fl + dx + c * topSegW;
+        ctx.beginPath();
+        ctx.moveTo(xF, ft);
+        ctx.lineTo(xB, ft - dy);
+        ctx.stroke();
+      }
+      // Top-face shine strip
+      ctx.fillStyle = 'rgba(220, 140, 70, 0.38)';
+      ctx.beginPath();
+      ctx.moveTo(fl + w * 0.08,       ft);
+      ctx.lineTo(fl + w * 0.52,       ft);
+      ctx.lineTo(fl + dx + w * 0.52,  ft - dy);
+      ctx.lineTo(fl + dx + w * 0.08,  ft - dy);
+      ctx.closePath();
+      ctx.fill();
+
+      /* ── 3. FRONT FACE (golden wrapper + chocolate slab) ── */
+      // Wrapper background
+      const wrapGrad = ctx.createLinearGradient(fl, ft, fr, fb);
+      wrapGrad.addColorStop(0,    '#FFE55A');
+      wrapGrad.addColorStop(0.38, '#FFC107');
+      wrapGrad.addColorStop(1,    '#D4900A');
+      ctx.fillStyle = wrapGrad;
+      ctx.beginPath();
+      ctx.roundRect(fl, ft, w, h, size * 0.09);
+      ctx.fill();
+      ctx.strokeStyle = '#A0720A';
+      ctx.lineWidth = size * 0.04;
+      ctx.stroke();
+
+      // Wrapper fold crease lines (left & right flaps)
+      ctx.strokeStyle = 'rgba(255,255,255,0.48)';
+      ctx.lineWidth = size * 0.025;
+      ctx.beginPath();
+      ctx.moveTo(fl + w * 0.17, ft + size * 0.04);
+      ctx.lineTo(fl + w * 0.17, fb - size * 0.04);
+      ctx.moveTo(fl + w * 0.83, ft + size * 0.04);
+      ctx.lineTo(fl + w * 0.83, fb - size * 0.04);
+      ctx.stroke();
+
+      // Torn/peeled wrapper edge (jagged line top of slab)
+      const tearY = ft + h * 0.18;
+      ctx.strokeStyle = '#A0720A';
+      ctx.lineWidth = size * 0.025;
+      ctx.beginPath();
+      ctx.moveTo(fl + w * 0.14, tearY);
+      for (let i = 0; i <= 6; i++) {
+        const tx = fl + w * 0.14 + (w * 0.72 / 6) * i;
+        const ty = tearY + (i % 2 === 0 ? -size * 0.04 : size * 0.04);
+        ctx.lineTo(tx, ty);
+      }
+      ctx.stroke();
+
+      /* Chocolate slab on front face */
+      const cX = fl + w * 0.14;
+      const cY = ft + h * 0.17;
+      const cW = w * 0.72;
+      const cH = h * 0.69;
+      const cR = size * 0.055;
+
+      const chocoGrad = ctx.createLinearGradient(cX, cY, cX + cW, cY + cH);
+      chocoGrad.addColorStop(0,   '#A0522D');
+      chocoGrad.addColorStop(0.3, '#7B3F00');
+      chocoGrad.addColorStop(0.7, '#5C2D00');
+      chocoGrad.addColorStop(1,   '#3E1A00');
+      ctx.fillStyle = chocoGrad;
+      ctx.beginPath();
+      ctx.roundRect(cX, cY, cW, cH, cR);
+      ctx.fill();
+
+      // Slab 3D raised edge — top highlight strip
+      const edgeGrad = ctx.createLinearGradient(cX, cY, cX, cY + cH * 0.10);
+      edgeGrad.addColorStop(0, 'rgba(200, 120, 60, 0.55)');
+      edgeGrad.addColorStop(1, 'rgba(200, 120, 60, 0.00)');
+      ctx.fillStyle = edgeGrad;
+      ctx.beginPath();
+      ctx.roundRect(cX, cY, cW, cH * 0.10, [cR, cR, 0, 0]);
+      ctx.fill();
+
+      // Slab border
+      ctx.strokeStyle = '#2C1000';
+      ctx.lineWidth = size * 0.032;
+      ctx.beginPath();
+      ctx.roundRect(cX, cY, cW, cH, cR);
+      ctx.stroke();
+
+      // Segment grooves — 3 cols × 2 rows
+      const sCols = 3, sRows = 2;
+      const sW = cW / sCols, sH = cH / sRows;
+      ctx.strokeStyle = 'rgba(0,0,0,0.50)';
+      ctx.lineWidth = size * 0.030;
+      for (let c = 1; c < sCols; c++) {
+        ctx.beginPath();
+        ctx.moveTo(cX + c * sW, cY + size * 0.03);
+        ctx.lineTo(cX + c * sW, cY + cH - size * 0.03);
+        ctx.stroke();
+      }
+      for (let r = 1; r < sRows; r++) {
+        ctx.beginPath();
+        ctx.moveTo(cX + size * 0.03, cY + r * sH);
+        ctx.lineTo(cX + cW - size * 0.03, cY + r * sH);
+        ctx.stroke();
+      }
+
+      // Per-segment gloss ellipses
+      ctx.fillStyle = 'rgba(255, 210, 150, 0.22)';
+      for (let c = 0; c < sCols; c++) {
+        for (let r = 0; r < sRows; r++) {
+          const ex = cX + c * sW + sW * 0.18;
+          const ey = cY + r * sH + sH * 0.14;
+          ctx.beginPath();
+          ctx.ellipse(ex + sW * 0.18, ey + sH * 0.10,
+                      sW * 0.22, sH * 0.16, -0.35, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Big wrapper gloss (top-left shine)
+      const gloss = ctx.createLinearGradient(fl + w*0.07, ft + h*0.05,
+                                             fl + w*0.42, ft + h*0.48);
+      gloss.addColorStop(0, 'rgba(255,255,255,0.58)');
+      gloss.addColorStop(1, 'rgba(255,255,255,0.00)');
+      ctx.fillStyle = gloss;
+      ctx.beginPath();
+      ctx.roundRect(fl + w*0.07, ft + h*0.05, w*0.33, h*0.36, size*0.06);
+      ctx.fill();
+
+      // "CHOCO" label at bottom of wrapper
+      ctx.fillStyle = '#7B4A10';
+      ctx.font = `bold ${Math.max(7, Math.floor(size * 0.185))}px 'Comic Sans MS', sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      // Add subtle text shadow
+      ctx.shadowColor = 'rgba(0,0,0,0.3)';
+      ctx.shadowBlur = 2;
+      ctx.fillText('CHOCO', 0, ft + h * 0.875);
+      ctx.shadowBlur = 0;
+
+      // Bottom edge shadow line for grounding
+      ctx.strokeStyle = 'rgba(0,0,0,0.28)';
+      ctx.lineWidth = size * 0.038;
+      ctx.beginPath();
+      ctx.moveTo(fl + size * 0.06, fb);
+      ctx.lineTo(fr - size * 0.02, fb);
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
     function renderTrackItem(item) {
       const p = project3D(item.lane * LANE_WIDTH, item.y, item.z);
       if (p.scale <= 0) return;
@@ -1377,11 +1634,13 @@
       ctx.fill();
 
       if (item.type === 'choco') {
-        // CHOCOLATE BAR 🍫
-        ctx.font = `${Math.floor(size * 1.2)}px sans-serif`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('🍫', 0, 0);
+        // CHOCOLATE BAR - 3D drawn with slow spin
+        const spinAngle = (Date.now() * 0.0018 + item.z * 0.01) % (Math.PI * 2);
+        const spinScale = 0.72 + 0.28 * Math.abs(Math.cos(spinAngle));
+        ctx.save();
+        ctx.scale(spinScale, 1);
+        drawChocoBar(0, 0, size);
+        ctx.restore();
       } else if (item.type === 'gem') {
         // SHINY GEM 💎
         ctx.font = `${Math.floor(size * 1.15)}px sans-serif`;
